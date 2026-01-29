@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String
+  role      Role
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  cars           UserCar[]
+  tickets        Ticket[]
+  managedAreas   ParkingArea[] @relation("ManagerAreas")
+  driverStatus   DriverStatus?
+  driverAssignments DriverAssignment[]
+
+}
+
+model UserCar {
+  id        String   @id @default(uuid())
+  userId    String
+  vehicleNo String
+  type      String
+  color     String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  ticket Ticket[]
+}
+
+model ParkingArea {
+  id        String   @id @default(uuid())
+  name      String
+  location  String
+  qrCode    String
+  managerId String
+  createdAt DateTime @default(now())
+
+  manager User @relation("ManagerAreas", fields: [managerId], references: [id])
+  spaces  ParkingSpace[]
+  tickets Ticket[]
+}
+
+model ParkingSpace {
+  id            String   @id @default(uuid())
+  parkingAreaId String
+  spaceNumber   String
+  status        SpaceStatus @default(FREE)
+
+  parkingArea ParkingArea @relation(fields: [parkingAreaId], references: [id])
+  assignment  SpaceAssignment[]
+}
+
+model Ticket {
+  id            String   @id @default(uuid())
+  ticketNumber  String   @unique
+  userId        String
+  carId         String   
+  parkingAreaId String
+  status        TicketStatus
+  createdAt     DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  car         UserCar     @relation(fields: [carId], references: [id])
+  parkingArea ParkingArea @relation(fields: [parkingAreaId], references: [id])
+  payment     Payment?
+  requests    ParkingRequest[]
+  spaceAssign SpaceAssignment?
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  ticketId  String   @unique
+  amount    Float
+  status    PaymentStatus
+  createdAt DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+}
+
+model ParkingRequest {
+  id        String   @id @default(uuid())
+  ticketId  String
+  managerId String
+  type      RequestType
+  status    RequestStatus
+  createdAt DateTime @default(now())
+
+  ticket      Ticket @relation(fields: [ticketId], references: [id])
+  assignment DriverAssignment?
+}
+
+model DriverStatus {
+  driverId   String  @id
+  managerId  String
+  status     DriverWorkStatus
+  dlNumber   String
+  dlPhotoUrl String
+
+  driver User @relation(fields: [driverId], references: [id])
+}
+
+model DriverAssignment {
+  id         String   @id @default(uuid())
+  requestId  String   @unique
+  driverId   String
+  assignedAt DateTime @default(now())
+  completedAt DateTime?
+
+  request ParkingRequest @relation(fields: [requestId], references: [id])
+  driver  User           @relation(fields: [driverId], references: [id])
+}
+
+model SpaceAssignment {
+  id        String   @id @default(uuid())
+  spaceId   String   @unique
+  ticketId  String   @unique
+  assignedAt DateTime @default(now())
+  releasedAt DateTime?
+
+  space  ParkingSpace @relation(fields: [spaceId], references: [id])
+  ticket Ticket       @relation(fields: [ticketId], references: [id])
+}
+
+enum Role {
+  user
+  manager
+  driver
+  super_admin
+}
+
+enum TicketStatus {
+  paid
+  parked
+  retrieval_requested
+  retrieved
+  cancelled
+}
+
+enum PaymentStatus {
+  success
+  failed
+}
+
+enum RequestType {
+  park
+  retrieve
+}
+
+enum RequestStatus {
+  pending
+  assigned
+  completed
+}
+
+enum DriverWorkStatus {
+  available
+  busy
+}
+
+enum SpaceStatus {
+  FREE
+  OCCUPIED
+}
