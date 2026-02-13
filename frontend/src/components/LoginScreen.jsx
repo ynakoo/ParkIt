@@ -1,12 +1,14 @@
 import { useState } from 'react';
 
-function LoginScreen({ onNavigate }) {
+function LoginScreen({ onNavigate,onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const submit = async e => {
     e.preventDefault();
+    const res = await onLogin(email.trim(), password);
+    if (!res.success) setError(res.message);
   };
 
   return (
