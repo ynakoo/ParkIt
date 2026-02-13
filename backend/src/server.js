@@ -16,7 +16,9 @@ app.get('/', async (req, res) => {
 })
 
 const authRoutes = require('./routes/auth.routes')
+const adminRoutes = require('./routes/superAdmin.routes')
 app.use('/api/auth', authRoutes)
+app.use('/api/superAdmin', adminRoutes)
 // app.use((err, req, res, next) => {
 //     console.error("Unhandled Error:", err);
 //     res.status(500).json({
