@@ -1,13 +1,18 @@
 const router = require('express').Router();
-const auth = require('../middlewares/auth.middleware');
-const role = require('../middlewares/role.middleware');
+const authMiddleware= require('../middlewares/auth.middleware');
+const roleMiddleware = require('../middlewares/role.middleware');
 const c = require('../controllers/superAdmin.controller');
 
-router.post('/managers', auth, role('SUPERADMIN'), c.createManager);
-router.get('/managers', auth, role('SUPERADMIN'), c.getManagers);
-router.post('/parking-areas', auth, role('SUPERADMIN'), c.createParkingArea);
-router.get('/parking-areas', auth, role('SUPERADMIN'), c.getParkingAreas);
-router.post('/approve-driver/:userId', auth, role('SUPERADMIN'), c.approveDriver);
-router.get('/pending-drivers', auth, role('SUPERADMIN'), c.getPendingDrivers);
+// router.use(authMiddleware);
+// router.use(roleMiddleware('SUPERADMIN'));
+
+
+router.post('/managers',  c.createManager);
+router.get('/managers',  c.getManagers);
+router.post('/parking-areas',  c.createParkingArea);
+router.get('/parking-areas',  c.getParkingAreas);
+router.get('/parking-areas/:id',  c.getParkingAreaDetails);
+router.post('/approve-driver/:userId', c.approveDriver);
+router.get('/pending-drivers', c.getPendingDrivers);
 
 module.exports = router;
