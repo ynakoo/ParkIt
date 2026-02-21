@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import LoginScreen from './components/LoginScreen';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import ScanQR from './components/ScanQR';
+import SelectCar from './components/SelectCar';
+import MakePayment from './components/MakePayment';
+import Ticket from './components/Ticket';
 import DriverDashboard from './components/DriverDashboard';
 import ManagerDashboard from './components/ManagerDashboard';
-import SuperAdminDashboard from './components/SuperAdminDashboard';
+import SuperAdminDashboard from './components/SuperAdmin/SuperAdminDashboard';
 import Layout from './components/Layout';
 
 const ROLE_SCREEN = {
@@ -17,14 +21,43 @@ const ROLE_SCREEN = {
 function App() {
   const [user, setUser] = useState(null);
   const [screen, setScreen] = useState('LOGIN');
+  const [parkingData, setParkingData] = useState({ parkingArea: null, car: null });
+  
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const savedUser = localStorage.getItem('currentUser');
+    
+    if (token && savedUser) {
+      const userData = JSON.parse(savedUser);
+      setUser(userData);
+      setScreen(ROLE_SCREEN[userData.role]);
+    }
+  }, []);
   const renderScreen = () => {
     switch (screen) {
       case "USER_DASHBOARD":
         return <Dashboard user={user} onNavigate={setScreen} />;
+      case "SCAN_QR":
+        return <ScanQR onBack={() => setScreen('USER_DASHBOARD')} onParkingSelected={(area) => {
+          setParkingData({...parkingData, parkingArea: area});
+          setScreen('SELECT_CAR');
+        }} />;
+      case "SELECT_CAR":
+        return <SelectCar onBack={() => setScreen('SCAN_QR')} parkingArea={parkingData.parkingArea} onCarSelected={(car) => {
+          setParkingData({...parkingData, car});
+          setScreen('MAKE_PAYMENT');
+        }} />;
+      case "MAKE_PAYMENT":
+        return <MakePayment onBack={() => setScreen('SELECT_CAR')} parkingArea={parkingData.parkingArea} car={parkingData.car} onPaymentComplete={(ticket) => {
+          setParkingData({ parkingArea: null, car: null });
+          setScreen('TICKET_VIEW');
+        }} />;
+      case "TICKET_VIEW":
+        return <Ticket ticket={{ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED'}} onDone={() => setScreen('USER_DASHBOARD')} />;
       case "DRIVER_DASHBOARD":
         return <DriverDashboard />;
       case "MANAGER_DASHBOARD":
-        return <ManagerDashboard user={user} />;
+        return <ManagerDashboard />;
       case "SUPERADMIN_DASHBOARD":
         return <SuperAdminDashboard />;
       default:
@@ -57,6 +90,10 @@ function App() {
   };
   if (screen === 'LOGIN') return <LoginScreen onLogin={handleLogin} onNavigate={setScreen} />;
   if (screen === 'REGISTER') return <Register onNavigate={setScreen} />;
+  
+  if (['SCAN_QR', 'SELECT_CAR', 'MAKE_PAYMENT', 'TICKET_VIEW'].includes(screen)) {
+    return renderScreen();
+  }
   return (
     <Layout
       title={`${user.role} Dashboard`}
