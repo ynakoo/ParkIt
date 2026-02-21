@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ParkingList from "./ParkingList";
+import ParkingDetails from "./ParkingDetails";
 import DriverRequests from "./DriverRequests";
 import AddManager from "./AddManager";
 import AddParking from "./AddParking";
