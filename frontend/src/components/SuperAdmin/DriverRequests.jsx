@@ -44,12 +44,14 @@ function DriverRequests() {
           <p>No pending requests</p>
         ) : (
           drivers.map((driver) => (
-            <div key={driver.id} className="driver-item">
+            <div key={driver.userId} className="driver-item">
               <div>
-                <strong>{driver.name}</strong>
-                <p style={{margin: '4px 0', color: '#666'}}>{driver.email}</p>
+                <strong>{driver.user.name}</strong>
+                <p style={{margin: '4px 0', color: '#666'}}>{driver.user.email}</p>
+                <p style={{margin: '4px 0', color: '#666'}}>DL: {driver.dlNumber}</p>
+                <p style={{margin: '4px 0', color: '#666'}}>Parking: {driver.parkingArea.name}</p>
               </div>
-              <button onClick={() => approveDriver(driver.id)}>
+              <button onClick={() => approveDriver(driver.userId)}>
                 Approve
               </button>
             </div>
