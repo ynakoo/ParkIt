@@ -11,76 +11,74 @@ model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
-  password  String
   role      Role
   createdAt DateTime @default(now())
-
-  manager Manager?
-  driver  Driver?
-  cars    Car[]
-  tickets Ticket[]
+  password  String
+  cars      Car[]
+  driver    Driver?
+  manager   Manager?
+  tickets   Ticket[]
 }
 
 model Manager {
   userId String        @id
   status ManagerStatus @default(PENDING)
-
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parkingArea ParkingArea?
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ParkingArea {
-  id        String   @id
+  id        String            @id
   name      String
   location  String
-  qrCode    String   @unique
-  amount    String
-  createdAt DateTime @default(now())
-
-  managerId String  @unique
-  manager   Manager @relation(fields: [managerId], references: [userId], onDelete: Cascade)
-
-  drivers Driver[]
-  tickets Ticket[]
+  qrCode    String            @unique
+  managerId String            @unique
+  createdAt DateTime          @default(now())
+  amount    Int
+  status    ParkingAreaStatus @default(PENDING)
+  drivers   Driver[]
+  tickets   Ticket[]
 }
 
 model Driver {
-  userId        String       @id
+  userId        String          @id
   parkingAreaId String
-  status        DriverStatus @default(AVAILABLE)
-  dlNumber      String       @unique
+  status        DriverStatus    @default(AVAILABLE)
+  dlNumber      String          @unique
+  parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requests      DriverRequest[]
 
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parkingArea ParkingArea @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
-
-  requests DriverRequest[]
+  @@index([parkingAreaId], map: "Driver_parkingAreaId_fkey")
 }
 
 model Car {
-  id          String @id
+  id          String   @id
   userId      String
   plateNumber String
   brand       String
   model       String
   color       String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tickets     Ticket[]
 
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tickets Ticket[]
+  @@index([userId], map: "Car_userId_fkey")
 }
 
 model Ticket {
-  ticketNumber  String       @id
-  status        TicketStatus @default(REQUESTED)
-  carId         String
-  createdAt     DateTime     @default(now())
+  ticketNumber  String          @id
   userId        String
+  carId         String
   parkingAreaId String
+  status        TicketStatus    @default(REQUESTED)
+  createdAt     DateTime        @default(now())
+  requests      DriverRequest[]
+  car           Car             @relation(fields: [carId], references: [id], onDelete: Cascade)
+  parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  car         Car         @relation(fields: [carId], references: [id], onDelete: Cascade)
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parkingArea ParkingArea @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
-
-  requests DriverRequest[]
+  @@index([carId], map: "Ticket_carId_fkey")
+  @@index([parkingAreaId], map: "Ticket_parkingAreaId_fkey")
+  @@index([userId], map: "Ticket_userId_fkey")
 }
 
 model DriverRequest {
@@ -90,9 +88,11 @@ model DriverRequest {
   driverId    String?
   status      RequestStatus @default(PENDING)
   createdAt   DateTime      @default(now())
+  driver      Driver?       @relation(fields: [driverId], references: [userId])
+  ticket      Ticket        @relation(fields: [ticketNo], references: [ticketNumber], onDelete: Cascade)
 
-  ticket Ticket  @relation(fields: [ticketNo], references: [ticketNumber], onDelete: Cascade)
-  driver Driver? @relation(fields: [driverId], references: [userId], onDelete: SetNull)
+  @@index([driverId], map: "DriverRequest_driverId_fkey")
+  @@index([ticketNo], map: "DriverRequest_ticketNo_fkey")
 }
 
 enum Role {
@@ -131,4 +131,9 @@ enum RequestStatus {
 enum RequestType {
   PARKING
   RETRIEVAL
+}
+
+enum ParkingAreaStatus {
+  PENDING
+  ACTIVE
 }
