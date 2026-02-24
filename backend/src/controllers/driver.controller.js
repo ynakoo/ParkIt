@@ -169,8 +169,49 @@ const getActiveTickets = async (req, res) => {
   }
 };
 
+const getStats = async (req, res) => {
+  try {
+    const driverId = req.user.id;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Today's stats
+    const todayRequests = await prisma.driverRequest.findMany({
+      where: {
+        driverId,
+        status: 'APPROVED',
+        createdAt: { gte: today }
+      }
+    });
+
+    const todayParking = todayRequests.filter(r => r.requestType === 'PARKING').length;
+    const todayRetrieval = todayRequests.filter(r => r.requestType === 'RETRIEVAL').length;
+
+    // Total stats
+    const totalRequests = await prisma.driverRequest.findMany({
+      where: {
+        driverId,
+        status: 'APPROVED'
+      }
+    });
+
+    const totalParking = totalRequests.filter(r => r.requestType === 'PARKING').length;
+    const totalRetrieval = totalRequests.filter(r => r.requestType === 'RETRIEVAL').length;
+
+    res.json({
+      todayParking,
+      todayRetrieval,
+      totalParking,
+      totalRetrieval
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 module.exports = {
   getProfile,
+  getStats,
   getRequests,
   acceptRequest,
   completeParking,
