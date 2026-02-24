@@ -1,3 +1,5 @@
+import './layout.css';
+
 function Layout({ children, onBack, onDashboard, onLogout, showBack, title }) {
     return (
       <div className="layout">

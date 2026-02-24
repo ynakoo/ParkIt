@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import HomePage from './components/HomePage';
 import LoginScreen from './components/LoginScreen';
 import Register from './components/Register';
-import Dashboard from './components/Dashboard';
-import ScanQR from './components/ScanQR';
-import SelectCar from './components/SelectCar';
-import MakePayment from './components/MakePayment';
-import Ticket from './components/Ticket';
-import DriverDashboard from './components/DriverDashboard';
+import Dashboard from './components/User/Dashboard';
+import ScanQR from './components/User/ScanQR';
+import SelectCar from './components/User/SelectCar';
+import MakePayment from './components/User/MakePayment';
+import Ticket from './components/User/Ticket';
+import DriverDashboard from './components/Driver/DriverDashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 import SuperAdminDashboard from './components/SuperAdmin/SuperAdminDashboard';
 import Layout from './components/Layout';
@@ -20,7 +21,7 @@ const ROLE_SCREEN = {
 
 function App() {
   const [user, setUser] = useState(null);
-  const [screen, setScreen] = useState('LOGIN');
+  const [screen, setScreen] = useState('HOME');
   const [parkingData, setParkingData] = useState({ parkingArea: null, car: null });
   
   useEffect(() => {
@@ -88,15 +89,13 @@ function App() {
       return { success: false, message: 'server error' };
     }
   };
+  if (screen === 'HOME') return <HomePage onNavigate={setScreen} />;
   if (screen === 'LOGIN') return <LoginScreen onLogin={handleLogin} onNavigate={setScreen} />;
   if (screen === 'REGISTER') return <Register onNavigate={setScreen} />;
   
-  if (['SCAN_QR', 'SELECT_CAR', 'MAKE_PAYMENT', 'TICKET_VIEW'].includes(screen)) {
-    return renderScreen();
-  }
   return (
     <Layout
-      title={`${user.role} Dashboard`}
+      title={`${user?.role || ''} Dashboard`}
       onLogout={() => { localStorage.clear(); setScreen('LOGIN'); }}
       onDashboard={() => setScreen(ROLE_SCREEN[user.role])}
     >
