@@ -2,38 +2,60 @@
   display: flex;
   min-height: 100vh;
   background: #f5f5f5;
+  flex-direction: column;
 }
 
 .admin-sidebar {
-  width: 260px;
-  background: linear-gradient(180deg, #ff6b35 0%, #f7931e 100%);
+  width: 100%;
+  background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
   color: white;
-  padding: 30px 0;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  padding: 20px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .admin-sidebar h3 {
-  padding: 0 25px 20px;
-  font-size: 24px;
+  padding: 0 20px 15px;
+  font-size: 20px;
   border-bottom: 1px solid rgba(255,255,255,0.2);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .admin-sidebar p {
-  padding: 15px 25px;
+  padding: 12px 20px;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 15px;
-}
-
-.admin-sidebar p:hover {
-  background: rgba(255,255,255,0.2);
-  padding-left: 30px;
+  font-size: 14px;
 }
 
 .admin-content {
   flex: 1;
-  padding: 40px;
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .admin-container {
+    flex-direction: row;
+  }
+  
+  .admin-sidebar {
+    width: 260px;
+    padding: 30px 0;
+  }
+  
+  .admin-sidebar h3 {
+    padding: 0 25px 20px;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .admin-sidebar p {
+    padding: 15px 25px;
+    font-size: 15px;
+  }
+  
+  .admin-content {
+    padding: 40px;
+  }
 }
 
 .admin-content h2 {
@@ -44,9 +66,22 @@
 
 .parking-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 15px;
   margin-top: 20px;
+}
+
+@media (min-width: 640px) {
+  .parking-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .parking-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
 }
 
 .parking-card {
@@ -63,7 +98,7 @@
 }
 
 .parking-card h3 {
-  color: #ff6b35;
+  color: #e74c3c;
   margin-bottom: 12px;
   font-size: 20px;
 }
@@ -77,7 +112,7 @@
 .parking-card button {
   margin-top: 15px;
   padding: 10px 20px;
-  background: #ff6b35;
+  background: #27ae60;
   color: white;
   border: none;
   border-radius: 6px;
@@ -87,15 +122,22 @@
 }
 
 .parking-card button:hover {
-  background: #f7931e;
+  background: #229954;
 }
 
 .admin-form {
   background: white;
-  padding: 30px;
+  padding: 20px;
   border-radius: 12px;
-  max-width: 500px;
+  max-width: 100%;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+@media (min-width: 768px) {
+  .admin-form {
+    padding: 30px;
+    max-width: 500px;
+  }
 }
 
 .admin-form .form-group {
@@ -123,13 +165,13 @@
 .admin-form input:focus,
 .admin-form select:focus {
   outline: none;
-  border-color: #ff6b35;
+  border-color: #2a5298;
 }
 
 .admin-form button {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -186,7 +228,7 @@
 }
 
 .profile-card h2 {
-  color: #ff6b35;
+  color: #e74c3c;
   margin-bottom: 20px;
 }
 

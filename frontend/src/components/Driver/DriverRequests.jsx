@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
-import './driver.css';
 
-function DriverDashboard() {
+function DriverRequests() {
   const [requests, setRequests] = useState([]);
   const [activeTickets, setActiveTickets] = useState([]);
-  const [profile, setProfile] = useState(null);
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    fetchProfile();
     fetchRequests();
     fetchActiveTickets();
     const interval = setInterval(() => {
@@ -17,14 +14,6 @@ function DriverDashboard() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
-  const fetchProfile = async () => {
-    const res = await fetch('http://localhost:3000/api/driver/profile', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await res.json();
-    setProfile(data);
-  };
 
   const fetchRequests = async () => {
     const res = await fetch('http://localhost:3000/api/driver/requests', {
@@ -80,15 +69,8 @@ function DriverDashboard() {
   };
 
   return (
-    <div className="driver-dashboard">
-      <h2>Driver Dashboard</h2>
-      {profile && (
-        <div className="driver-info">
-          <p><strong>Parking Area:</strong> {profile.parkingArea.name}</p>
-          <p><strong>Location:</strong> {profile.parkingArea.location}</p>
-          <p><strong>Status:</strong> <span className={`status-badge ${profile.status.toLowerCase()}`}>{profile.status}</span></p>
-        </div>
-      )}
+    <div>
+      <h2>Requests</h2>
 
       {activeTickets.length > 0 && (
         <div className="active-section">
@@ -138,4 +120,4 @@ function DriverDashboard() {
   );
 }
 
-export default DriverDashboard;
+export default DriverRequests;
