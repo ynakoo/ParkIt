@@ -16,27 +16,27 @@ model User {
   password  String
   cars      Car[]
   driver    Driver?
-  manager   Manager?
   tickets   Ticket[]
-}
 
-model Manager {
-  userId String        @id
-  status ManagerStatus @default(PENDING)
-  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // 🔹 Added relation to ParkingArea
+  parkingAreas ParkingArea[]
 }
 
 model ParkingArea {
-  id        String            @id
+  id        String            @id @default(uuid())
   name      String
   location  String
   qrCode    String            @unique
-  managerId String            @unique
+  managerId String?           @unique
   createdAt DateTime          @default(now())
   amount    Int
   status    ParkingAreaStatus @default(PENDING)
-  drivers   Driver[]
-  tickets   Ticket[]
+
+  // 🔹 Relation to User
+  manager User? @relation(fields: [managerId], references: [id], onDelete: SetNull)
+
+  drivers Driver[]
+  tickets Ticket[]
 }
 
 model Driver {
@@ -102,11 +102,11 @@ enum Role {
   USER
 }
 
-enum ManagerStatus {
-  PENDING
-  ACTIVE
-  SUSPENDED
-}
+// enum ManagerStatus {
+//   PENDING
+//   ACTIVE
+//   SUSPENDED
+// }
 
 enum DriverStatus {
   AVAILABLE

@@ -16,6 +16,7 @@ function ParkingList({ onSelect }) {
       );
 
       const data = await res.json();
+      console.log(data)
       setParkingAreas(data);
     };
 
@@ -30,7 +31,7 @@ function ParkingList({ onSelect }) {
           <div key={area.id} className="parking-card">
             <h3>{area.name}</h3>
             <p>📍 Location: {area.location}</p>
-            <p>👤 Manager: {area.user?.name || "Not Assigned"}</p>
+            <p>👤 Manager: {area.manager?.name || "Not Assigned"}</p>
             <p>💵 Rate: ${area.amount}/hr</p>
             <button onClick={() => onSelect(area)}>View Details</button>
           </div>

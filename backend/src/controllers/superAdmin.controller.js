@@ -18,9 +18,13 @@ const createParkingArea = async (req, res) => {
 
 const getParkingAreas = async (req, res) => {
   const areas = await prisma.parkingArea.findMany({
-    include:{
-      user:true
+    include: {
+    manager: {
+      select: {
+        name: true
+      }
     }
+  }
   });
   res.json(areas);
 };
