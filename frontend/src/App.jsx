@@ -29,45 +29,19 @@ function App() {
     const savedUser = localStorage.getItem('currentUser');
     
     if (token && savedUser) {
-      const userData = JSON.parse(savedUser);
-      setUser(userData);
-      setScreen(ROLE_SCREEN[userData.role]);
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        setScreen(ROLE_SCREEN[userData.role]);
+      } catch (e) {
+        localStorage.clear();
+      }
     }
   }, []);
-  const renderScreen = () => {
-    switch (screen) {
-      case "USER_DASHBOARD":
-        return <Dashboard user={user} onNavigate={setScreen} />;
-      case "SCAN_QR":
-        return <ScanQR onBack={() => setScreen('USER_DASHBOARD')} onParkingSelected={(area) => {
-          setParkingData({...parkingData, parkingArea: area});
-          setScreen('SELECT_CAR');
-        }} />;
-      case "SELECT_CAR":
-        return <SelectCar onBack={() => setScreen('SCAN_QR')} parkingArea={parkingData.parkingArea} onCarSelected={(car) => {
-          setParkingData({...parkingData, car});
-          setScreen('MAKE_PAYMENT');
-        }} />;
-      case "MAKE_PAYMENT":
-        return <MakePayment onBack={() => setScreen('SELECT_CAR')} parkingArea={parkingData.parkingArea} car={parkingData.car} onPaymentComplete={(ticket) => {
-          setParkingData({ parkingArea: null, car: null });
-          setScreen('TICKET_VIEW');
-        }} />;
-      case "TICKET_VIEW":
-        return <Ticket ticket={{ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED'}} onDone={() => setScreen('USER_DASHBOARD')} />;
-      case "DRIVER_DASHBOARD":
-        return <DriverDashboard />;
-      case "MANAGER_DASHBOARD":
-        return <ManagerDashboard />;
-      case "SUPERADMIN_DASHBOARD":
-        return <SuperAdminDashboard />;
-      default:
-        return null;
-    }
-  };
+
   const handleLogin = async (email, password) => {
     try{
-      const res = await fetch(`http://localhost:3000/api/auth/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -77,7 +51,6 @@ function App() {
       if (data.error){
         return { success: false, message: data.error };
       }
-      console.log(data)
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('currentUser', JSON.stringify(data.user));
       setUser(data.user);
@@ -85,23 +58,143 @@ function App() {
       return { success: true };
     }
     catch(err){
-      console.log('error received')
       return { success: false, message: 'server error' };
     }
   };
-  if (screen === 'HOME') return <HomePage onNavigate={setScreen} />;
-  if (screen === 'LOGIN') return <LoginScreen onLogin={handleLogin} onNavigate={setScreen} />;
-  if (screen === 'REGISTER') return <Register onNavigate={setScreen} />;
+
+  if (screen === 'HOME') {
+    return <HomePage onNavigate={setScreen} />;
+  }
   
-  return (
-    <Layout
-      title={`${user?.role || ''} Dashboard`}
-      onLogout={() => { localStorage.clear(); setScreen('LOGIN'); }}
-      onDashboard={() => setScreen(ROLE_SCREEN[user.role])}
-    >
-      {renderScreen()}
-    </Layout>
-  );
+  if (screen === 'LOGIN') {
+    return <LoginScreen onLogin={handleLogin} onNavigate={setScreen} />;
+  }
+  
+  if (screen === 'REGISTER') {
+    return <Register onNavigate={setScreen} />;
+  }
+
+  if (screen === 'USER_DASHBOARD') {
+    return (
+      <Layout
+        title="User Dashboard"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('USER_DASHBOARD')}
+      >
+        <Dashboard user={user} onNavigate={setScreen} />
+      </Layout>
+    );
+  }
+
+  if (screen === 'SCAN_QR') {
+    return (
+      <Layout
+        title="Scan QR"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('USER_DASHBOARD')}
+      >
+        <ScanQR 
+          onBack={() => setScreen('USER_DASHBOARD')} 
+          onParkingSelected={(area) => {
+            setParkingData({...parkingData, parkingArea: area});
+            setScreen('SELECT_CAR');
+          }} 
+        />
+      </Layout>
+    );
+  }
+
+  if (screen === 'SELECT_CAR') {
+    return (
+      <Layout
+        title="Select Car"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('USER_DASHBOARD')}
+      >
+        <SelectCar 
+          onBack={() => setScreen('SCAN_QR')} 
+          parkingArea={parkingData.parkingArea} 
+          onCarSelected={(car) => {
+            setParkingData({...parkingData, car});
+            setScreen('MAKE_PAYMENT');
+          }} 
+        />
+      </Layout>
+    );
+  }
+
+  if (screen === 'MAKE_PAYMENT') {
+    return (
+      <Layout
+        title="Payment"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('USER_DASHBOARD')}
+      >
+        <MakePayment 
+          onBack={() => setScreen('SELECT_CAR')} 
+          parkingArea={parkingData.parkingArea} 
+          car={parkingData.car} 
+          onPaymentComplete={() => {
+            setParkingData({ parkingArea: null, car: null });
+            setScreen('TICKET_VIEW');
+          }} 
+        />
+      </Layout>
+    );
+  }
+
+  if (screen === 'TICKET_VIEW') {
+    return (
+      <Layout
+        title="Ticket"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('USER_DASHBOARD')}
+      >
+        <Ticket 
+          ticket={{ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED'}} 
+          onDone={() => setScreen('USER_DASHBOARD')} 
+        />
+      </Layout>
+    );
+  }
+
+  if (screen === 'DRIVER_DASHBOARD') {
+    return (
+      <Layout
+        title="Driver Dashboard"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('DRIVER_DASHBOARD')}
+      >
+        <DriverDashboard />
+      </Layout>
+    );
+  }
+
+  if (screen === 'MANAGER_DASHBOARD') {
+    return (
+      <Layout
+        title="Manager Dashboard"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('MANAGER_DASHBOARD')}
+      >
+        <ManagerDashboard />
+      </Layout>
+    );
+  }
+
+  if (screen === 'SUPERADMIN_DASHBOARD') {
+    return (
+      <Layout
+        title="Super Admin Dashboard"
+        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
+        onDashboard={() => setScreen('SUPERADMIN_DASHBOARD')}
+      >
+        <SuperAdminDashboard />
+      </Layout>
+    );
+  }
+
+  return <HomePage onNavigate={setScreen} />;
 }
 
 export default App;

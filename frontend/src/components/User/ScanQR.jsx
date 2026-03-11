@@ -6,7 +6,7 @@ function ScanQR({ onBack, onParkingSelected }) {
 
   useEffect(() => {
     const fetchAreas = async () => {
-      const res = await fetch('http://localhost:3000/api/user/parking-areas', {
+      const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/parking-areas', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

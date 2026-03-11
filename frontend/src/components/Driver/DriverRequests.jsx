@@ -16,7 +16,7 @@ function DriverRequests() {
   }, []);
 
   const fetchRequests = async () => {
-    const res = await fetch('http://localhost:3000/api/driver/requests', {
+    const res = await fetch('${import.meta.env.VITE_API_URL}/api/driver/requests', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -24,7 +24,7 @@ function DriverRequests() {
   };
 
   const fetchActiveTickets = async () => {
-    const res = await fetch('http://localhost:3000/api/driver/active-tickets', {
+    const res = await fetch('${import.meta.env.VITE_API_URL}/api/driver/active-tickets', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -32,7 +32,7 @@ function DriverRequests() {
   };
 
   const handleAccept = async (requestId) => {
-    await fetch('http://localhost:3000/api/driver/accept-request', {
+    await fetch('${import.meta.env.VITE_API_URL}/api/driver/accept-request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ function DriverRequests() {
   };
 
   const handleCompleteParking = async (ticketNumber) => {
-    await fetch('http://localhost:3000/api/driver/complete-parking', {
+    await fetch('${import.meta.env.VITE_API_URL}/api/driver/complete-parking', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function DriverRequests() {
   };
 
   const handleCompleteRetrieval = async (ticketNumber) => {
-    await fetch('http://localhost:3000/api/driver/complete-retrieval', {
+    await fetch('${import.meta.env.VITE_API_URL}/api/driver/complete-retrieval', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

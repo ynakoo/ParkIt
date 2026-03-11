@@ -7,7 +7,7 @@ function ParkingList({ onSelect }) {
   useEffect(() => {
     const fetchParking = async () => {
       const res = await fetch(
-        "http://localhost:3000/api/superAdmin/parking-areas",
+        "${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas",
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -30,7 +30,7 @@ function ParkingList({ onSelect }) {
           <div key={area.id} className="parking-card">
             <h3>{area.name}</h3>
             <p>📍 Location: {area.location}</p>
-            <p>👤 Manager: {area.user?.name || "Not Assigned"}</p>
+            <p>👤 Manager: {area.manager?.name || "Not Assigned"}</p>
             <p>💵 Rate: ${area.amount}/hr</p>
             <button onClick={() => onSelect(area)}>View Details</button>
           </div>

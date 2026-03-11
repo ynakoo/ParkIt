@@ -11,7 +11,7 @@ function Dashboard({ user, onNavigate }) {
   }, []);
 
   const fetchTickets = async () => {
-    const res = await fetch('http://localhost:3000/api/user/tickets', {
+    const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/tickets', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -22,7 +22,7 @@ function Dashboard({ user, onNavigate }) {
 
   const handleRetrieval = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/user/request-retrieval', {
+      const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/request-retrieval', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

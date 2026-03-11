@@ -19,7 +19,7 @@ const createParkingArea = async (req, res) => {
 const getParkingAreas = async (req, res) => {
   const areas = await prisma.parkingArea.findMany({
     include:{
-      user:true
+      manager:true
     }
   });
   res.json(areas);
@@ -31,7 +31,7 @@ const getParkingAreaDetails = async (req, res) => {
   const area = await prisma.parkingArea.findUnique({
     where: { id },
     include: {
-      user: true,
+      manager: true,
       drivers: {
         include: {
           user: true
@@ -48,7 +48,10 @@ const createManager = async (req, res) => {
   const { name, email, password, parkingAreaId } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
-
+  const m = prisma.user.findUnique({where:{email}})
+  if (m){
+    return res.status(400).json({error:"Manager with this email already exists."})
+  }
   const manager = await prisma.user.create({
     data: {
       name,

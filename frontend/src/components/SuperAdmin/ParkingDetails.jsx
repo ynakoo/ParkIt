@@ -7,7 +7,7 @@ function ParkingDetails({ area, onBack }) {
   useEffect(() => {
     const fetchDetails = async () => {
       const res = await fetch(
-        `http://localhost:3000/api/superAdmin/parking-areas/${area.id}`,
+        `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas/${area.id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -16,7 +16,7 @@ function ParkingDetails({ area, onBack }) {
       setDetails(data);
     };
     fetchDetails();
-  }, [area.id]);
+  }, [area.id,token]);
 
   if (!details) return <p>Loading...</p>;
 
@@ -30,7 +30,7 @@ function ParkingDetails({ area, onBack }) {
         <p><strong>Location:</strong> {details.location}</p>
         <p><strong>QR Code:</strong> {details.qrCode}</p>
         <p><strong>Rate:</strong> ${details.amount}/hr</p>
-        <p><strong>Manager:</strong> {details.user?.name || 'Not Assigned'}</p>
+        <p><strong>Manager:</strong> {details.manager?.name || 'Not Assigned'}</p>
         <p><strong>Status:</strong> {details.status}</p>
       </div>
 

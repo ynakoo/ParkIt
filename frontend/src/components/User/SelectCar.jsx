@@ -11,7 +11,7 @@ function SelectCar({ onBack, parkingArea, onCarSelected }) {
   }, []);
 
   const fetchCars = async () => {
-    const res = await fetch('http://localhost:3000/api/user/cars', {
+    const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/cars', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -20,7 +20,7 @@ function SelectCar({ onBack, parkingArea, onCarSelected }) {
 
   const handleAddCar = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:3000/api/user/cars', {
+    await fetch('${import.meta.env.VITE_API_URL}/api/user/cars', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

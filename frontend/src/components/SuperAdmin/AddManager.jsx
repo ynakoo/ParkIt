@@ -12,7 +12,7 @@ function AddManager() {
   useEffect(() => {
     const fetchAreas = async () => {
       const res = await fetch(
-        "http://localhost:3000/api/superAdmin/parking-areas",
+        "${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas",
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -31,7 +31,7 @@ function AddManager() {
     e.preventDefault();
 
     await fetch(
-      "http://localhost:3000/api/superAdmin/managers",
+      "${import.meta.env.VITE_API_URL}/api/superAdmin/managers",
       {
         method: "POST",
         headers: {

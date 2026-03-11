@@ -6,7 +6,7 @@ function Profile() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await fetch('http://localhost:3000/api/manager/profile', {
+      const res = await fetch('${import.meta.env.VITE_API_URL}/api/manager/profile', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

@@ -6,7 +6,7 @@ function DriverRequests() {
 
   const fetchDrivers = async () => {
     const res = await fetch(
-      "http://localhost:3000/api/superAdmin/pending-drivers",
+      "${import.meta.env.VITE_API_URL}/api/superAdmin/pending-drivers",
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -20,7 +20,7 @@ function DriverRequests() {
 
   const approveDriver = async (id) => {
     await fetch(
-      `http://localhost:3000/api/superAdmin/approve-driver/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/superAdmin/approve-driver/${id}`,
       {
         method: "POST",
         headers: {

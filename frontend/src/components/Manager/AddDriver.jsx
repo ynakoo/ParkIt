@@ -10,7 +10,7 @@ function AddDriver() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:3000/api/manager/drivers', {
+    const res = await fetch('${import.meta.env.VITE_API_URL}/api/manager/drivers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

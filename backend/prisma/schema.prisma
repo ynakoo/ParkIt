@@ -1,9 +1,149 @@
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+// }
+
+// model User {
+//   id        String   @id @default(uuid())
+//   name      String
+//   email     String   @unique
+//   role      Role
+//   createdAt DateTime @default(now())
+//   password  String
+//   cars      Car[]
+//   driver    Driver?
+//   manager   Manager?
+//   tickets   Ticket[]
+// }
+
+// model Manager {
+//   userId String        @id
+//   status ManagerStatus @default(PENDING)
+//   user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
+
+// model ParkingArea {
+//   id        String            @id
+//   name      String
+//   location  String
+//   qrCode    String            @unique
+//   managerId String            @unique
+//   createdAt DateTime          @default(now())
+//   amount    Int
+//   status    ParkingAreaStatus @default(PENDING)
+//   drivers   Driver[]
+//   tickets   Ticket[]
+// }
+
+// model Driver {
+//   userId        String          @id
+//   parkingAreaId String
+//   status        DriverStatus    @default(AVAILABLE)
+//   dlNumber      String          @unique
+//   parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
+//   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   requests      DriverRequest[]
+
+//   @@index([parkingAreaId], map: "Driver_parkingAreaId_fkey")
+// }
+
+// model Car {
+//   id          String   @id
+//   userId      String
+//   plateNumber String
+//   brand       String
+//   model       String
+//   color       String
+//   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   tickets     Ticket[]
+
+//   @@index([userId], map: "Car_userId_fkey")
+// }
+
+// model Ticket {
+//   ticketNumber  String          @id
+//   userId        String
+//   carId         String
+//   parkingAreaId String
+//   status        TicketStatus    @default(REQUESTED)
+//   createdAt     DateTime        @default(now())
+//   requests      DriverRequest[]
+//   car           Car             @relation(fields: [carId], references: [id], onDelete: Cascade)
+//   parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
+//   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@index([carId], map: "Ticket_carId_fkey")
+//   @@index([parkingAreaId], map: "Ticket_parkingAreaId_fkey")
+//   @@index([userId], map: "Ticket_userId_fkey")
+// }
+
+// model DriverRequest {
+//   id          String        @id
+//   requestType RequestType
+//   ticketNo    String
+//   driverId    String?
+//   status      RequestStatus @default(PENDING)
+//   createdAt   DateTime      @default(now())
+//   driver      Driver?       @relation(fields: [driverId], references: [userId])
+//   ticket      Ticket        @relation(fields: [ticketNo], references: [ticketNumber], onDelete: Cascade)
+
+//   @@index([driverId], map: "DriverRequest_driverId_fkey")
+//   @@index([ticketNo], map: "DriverRequest_ticketNo_fkey")
+// }
+
+// enum Role {
+//   SUPERADMIN
+//   MANAGER
+//   DRIVER
+//   USER
+// }
+
+// enum ManagerStatus {
+//   PENDING
+//   ACTIVE
+//   SUSPENDED
+// }
+
+// enum DriverStatus {
+//   AVAILABLE
+//   BUSY
+//   INACTIVE
+// }
+
+// enum TicketStatus {
+//   REQUESTED
+//   DRIVER_ASSIGNED
+//   PARKING_STARTED
+//   PARKED
+//   CAR_ON_THE_WAY
+//   COMPLETED
+// }
+
+// enum RequestStatus {
+//   PENDING
+//   APPROVED
+// }
+
+// enum RequestType {
+//   PARKING
+//   RETRIEVAL
+// }
+
+// enum ParkingAreaStatus {
+//   PENDING
+//   ACTIVE
+// }
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,27 +156,27 @@ model User {
   password  String
   cars      Car[]
   driver    Driver?
-  manager   Manager?
   tickets   Ticket[]
-}
 
-model Manager {
-  userId String        @id
-  status ManagerStatus @default(PENDING)
-  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // 🔹 Added relation to ParkingArea
+  parkingAreas ParkingArea[]
 }
 
 model ParkingArea {
-  id        String            @id
+  id        String            @id @default(uuid())
   name      String
   location  String
   qrCode    String            @unique
-  managerId String            @unique
+  managerId String?           @unique
   createdAt DateTime          @default(now())
   amount    Int
   status    ParkingAreaStatus @default(PENDING)
-  drivers   Driver[]
-  tickets   Ticket[]
+
+  // 🔹 Relation to User
+  manager User? @relation(fields: [managerId], references: [id], onDelete: SetNull)
+
+  drivers Driver[]
+  tickets Ticket[]
 }
 
 model Driver {
@@ -48,7 +188,7 @@ model Driver {
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   requests      DriverRequest[]
 
-  @@index([parkingAreaId], map: "Driver_parkingAreaId_fkey")
+  @@index([parkingAreaId], map: "Driver_parkingArea_idx")
 }
 
 model Car {
@@ -61,7 +201,7 @@ model Car {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   tickets     Ticket[]
 
-  @@index([userId], map: "Car_userId_fkey")
+  @@index([userId], map: "Car_userId_idx")
 }
 
 model Ticket {
@@ -76,9 +216,9 @@ model Ticket {
   parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([carId], map: "Ticket_carId_fkey")
-  @@index([parkingAreaId], map: "Ticket_parkingAreaId_fkey")
-  @@index([userId], map: "Ticket_userId_fkey")
+  @@index([carId], map: "Ticket_car_idx")
+  @@index([parkingAreaId], map: "Ticket_parkingArea_idx")
+  @@index([userId], map: "Ticket_user_idx")
 }
 
 model DriverRequest {
@@ -91,8 +231,8 @@ model DriverRequest {
   driver      Driver?       @relation(fields: [driverId], references: [userId])
   ticket      Ticket        @relation(fields: [ticketNo], references: [ticketNumber], onDelete: Cascade)
 
-  @@index([driverId], map: "DriverRequest_driverId_fkey")
-  @@index([ticketNo], map: "DriverRequest_ticketNo_fkey")
+  @@index([driverId], map: "DriverRequest_driver_idx")
+  @@index([ticketNo], map: "DriverRequest_ticket_idx")
 }
 
 enum Role {
