@@ -16,6 +16,7 @@ function ParkingList({ onSelect }) {
       );
 
       const data = await res.json();
+      console.log(data)
       setParkingAreas(data);
     };
 
