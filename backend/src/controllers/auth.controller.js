@@ -24,6 +24,7 @@ register = async (req, res) => {
                 name,
                 email,
                 password: hashedPassword,
+
                 role: "USER",
             },
         });

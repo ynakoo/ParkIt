@@ -6,7 +6,7 @@ function DriverRequests() {
 
   const fetchDrivers = async () => {
     const res = await fetch(
-      "${import.meta.env.VITE_API_URL}/api/superAdmin/pending-drivers",
+      `${import.meta.env.VITE_API_URL}/api/superAdmin/pending-drivers`,
       {
         headers: {
           Authorization: `Bearer ${token}`
