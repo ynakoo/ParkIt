@@ -12,7 +12,7 @@ app.use(express.json())
 
 app.get('/', async (req, res) => {
     const users = await prisma.user.findMany()
-    res.json( users )
+    res.json(users)
     // await prisma.parkingArea.update({
     //     where:{
     //         id:"d170f956-34b4-4419-822b-b07c0913cd91"
@@ -44,6 +44,7 @@ app.use('/api/driver', driverRoutes)
 
 async function main() {
     try {
+        console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
         await prisma.$connect();
         console.log('Connected to Database');
 
