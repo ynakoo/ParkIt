@@ -3,12 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: var(--background);
   padding: 15px;
 }
 
 .auth-card {
-  background: white;
+  background: var(--surface);
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
@@ -17,10 +17,11 @@
 }
 
 .auth-header {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: white;
+  background: var(--surface);
+  color: var(--text-primary);
   padding: 30px 20px;
   text-align: center;
+  border-bottom: 1px solid var(--border);
 }
 
 .parking-icon {
@@ -48,7 +49,7 @@
 .auth-form h2 {
   margin: 0 0 20px;
   font-size: 22px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -90,7 +91,7 @@
 .input-group label {
   display: block;
   margin-bottom: 8px;
-  color: #555;
+  color: var(--text-secondary);
   font-size: 14px;
   font-weight: 500;
 }
@@ -98,8 +99,10 @@
 .input-group input {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  border-radius: 8px;
   font-size: 15px;
   transition: all 0.3s;
   box-sizing: border-box;
@@ -107,17 +110,17 @@
 
 .input-group input:focus {
   outline: none;
-  border-color: #2a5298;
-  box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .auth-btn {
   width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: white;
+  padding: 14px;
+  background: var(--primary);
+  color: var(--surface);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -126,8 +129,8 @@
 }
 
 .auth-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(42, 82, 152, 0.4);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .auth-btn:active {
@@ -137,15 +140,15 @@
 .auth-footer {
   margin-top: 25px;
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .link-btn {
   background: none;
   border: none;
-  color: #2a5298;
-  font-weight: 600;
+  color: var(--primary);
+  font-weight: 500;
   cursor: pointer;
   margin-left: 5px;
   font-size: 14px;
@@ -153,25 +156,26 @@
 }
 
 .link-btn:hover {
-  color: #1e3c72;
+  color: var(--primary-hover);
+  text-decoration: none;
 }
 
 .error-msg {
-  background: #fee;
-  color: #c33;
+  background: #fef2f2;
+  color: var(--error);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
   font-size: 14px;
-  border-left: 4px solid #c33;
+  border-left: 4px solid var(--error);
 }
 
 .success-msg {
-  background: #efe;
-  color: #3c3;
+  background: #ecfdf5;
+  color: var(--success);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
   font-size: 14px;
-  border-left: 4px solid #3c3;
+  border-left: 4px solid var(--success);
 }
