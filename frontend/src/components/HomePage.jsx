@@ -4,8 +4,8 @@ function HomePage({ onNavigate }) {
   return (
     <div className="home-container">
       <nav className="home-nav">
-        <div className="logo">🅿️ ParkIt</div>
-        <div className="nav-buttons">
+        <div className="logo">ParkIt</div>
+        <div className="nav-links">
           <button onClick={() => onNavigate('LOGIN')} className="nav-btn">Login</button>
           <button onClick={() => onNavigate('REGISTER')} className="nav-btn-primary">Sign Up</button>
         </div>
@@ -26,22 +26,22 @@ function HomePage({ onNavigate }) {
         <h2>Why Choose ParkIt?</h2>
         <div className="feature-grid">
           <div className="feature-card">
-            <div className="feature-icon">🚗</div>
+            <div className="feature-icon"></div>
             <h3>Valet Service</h3>
             <p>Professional drivers park and retrieve your car</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">📱</div>
+            <div className="feature-icon"></div>
             <h3>Real-Time Tracking</h3>
             <p>Track your parking request status live</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">💳</div>
+            <div className="feature-icon"></div>
             <h3>Easy Payment</h3>
             <p>Transparent pricing with instant payment</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">⚡</div>
+            <div className="feature-icon"></div>
             <h3>Quick Service</h3>
             <p>Fast response from available drivers</p>
           </div>

@@ -4,10 +4,12 @@ import './auth.css';
 function Register({ onNavigate }) {
   const [form, setForm] = useState({ name:'', email:'', password:'' });
   const [msg, setMsg] = useState('');
+  const [_loading, setLoading] = useState(false);
 
   const submit = async e => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -22,6 +24,8 @@ function Register({ onNavigate }) {
       }
     } catch (e) {
       setMsg(e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,7 +33,7 @@ function Register({ onNavigate }) {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <div className="parking-icon">🅿️</div>
+          <div className="parking-icon"></div>
           <h1>ParkIt</h1>
           <p>Smart Parking Solution</p>
         </div>

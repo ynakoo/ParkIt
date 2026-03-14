@@ -16,7 +16,7 @@ function LoginScreen({ onNavigate, onLogin }) {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <div className="parking-icon">🅿️</div>
+          <div className="parking-icon"></div>
           <h1>ParkIt</h1>
           <p>Smart Parking Solution</p>
         </div>

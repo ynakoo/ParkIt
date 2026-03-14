@@ -23,32 +23,34 @@ function App() {
   const [user, setUser] = useState(null);
   const [screen, setScreen] = useState('HOME');
   const [parkingData, setParkingData] = useState({ parkingArea: null, car: null });
-  
+  const [_loading, setLoading] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('currentUser');
-    
     if (token && savedUser) {
       try {
         const userData = JSON.parse(savedUser);
         setUser(userData);
         setScreen(ROLE_SCREEN[userData.role]);
       } catch (e) {
+        console.error(e);
         localStorage.clear();
       }
     }
   }, []);
 
   const handleLogin = async (email, password) => {
-    try{
+    try {
+      setLoading(true);
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-  
+
       const data = await res.json();
-      if (data.error){
+      if (data.error) {
         return { success: false, message: data.error };
       }
       localStorage.setItem('authToken', data.token);
@@ -57,19 +59,22 @@ function App() {
       setScreen(ROLE_SCREEN[data.user.role]);
       return { success: true };
     }
-    catch(err){
+    catch (err) {
+      console.error(err);
       return { success: false, message: 'server error' };
+    } finally {
+      setLoading(false);
     }
   };
 
   if (screen === 'HOME') {
     return <HomePage onNavigate={setScreen} />;
   }
-  
+
   if (screen === 'LOGIN') {
     return <LoginScreen onLogin={handleLogin} onNavigate={setScreen} />;
   }
-  
+
   if (screen === 'REGISTER') {
     return <Register onNavigate={setScreen} />;
   }
@@ -93,12 +98,12 @@ function App() {
         onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
         onDashboard={() => setScreen('USER_DASHBOARD')}
       >
-        <ScanQR 
-          onBack={() => setScreen('USER_DASHBOARD')} 
+        <ScanQR
+          onBack={() => setScreen('USER_DASHBOARD')}
           onParkingSelected={(area) => {
-            setParkingData({...parkingData, parkingArea: area});
+            setParkingData({ ...parkingData, parkingArea: area });
             setScreen('SELECT_CAR');
-          }} 
+          }}
         />
       </Layout>
     );
@@ -111,13 +116,13 @@ function App() {
         onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
         onDashboard={() => setScreen('USER_DASHBOARD')}
       >
-        <SelectCar 
-          onBack={() => setScreen('SCAN_QR')} 
-          parkingArea={parkingData.parkingArea} 
+        <SelectCar
+          onBack={() => setScreen('SCAN_QR')}
+          parkingArea={parkingData.parkingArea}
           onCarSelected={(car) => {
-            setParkingData({...parkingData, car});
+            setParkingData({ ...parkingData, car });
             setScreen('MAKE_PAYMENT');
-          }} 
+          }}
         />
       </Layout>
     );
@@ -130,14 +135,14 @@ function App() {
         onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
         onDashboard={() => setScreen('USER_DASHBOARD')}
       >
-        <MakePayment 
-          onBack={() => setScreen('SELECT_CAR')} 
-          parkingArea={parkingData.parkingArea} 
-          car={parkingData.car} 
+        <MakePayment
+          onBack={() => setScreen('SELECT_CAR')}
+          parkingArea={parkingData.parkingArea}
+          car={parkingData.car}
           onPaymentComplete={() => {
             setParkingData({ parkingArea: null, car: null });
             setScreen('TICKET_VIEW');
-          }} 
+          }}
         />
       </Layout>
     );
@@ -150,9 +155,9 @@ function App() {
         onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
         onDashboard={() => setScreen('USER_DASHBOARD')}
       >
-        <Ticket 
-          ticket={{ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED'}} 
-          onDone={() => setScreen('USER_DASHBOARD')} 
+        <Ticket
+          ticket={{ ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED' }}
+          onDone={() => setScreen('USER_DASHBOARD')}
         />
       </Layout>
     );
