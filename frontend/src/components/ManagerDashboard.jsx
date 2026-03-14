@@ -24,10 +24,10 @@ function ManagerDashboard() {
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <h3>🅿️ Manager Panel</h3>
-        <p onClick={() => setSection('DASHBOARD')}>📊 Dashboard</p>
-        <p onClick={() => setSection('ADD_DRIVER')}>➕ Add Driver</p>
-        <p onClick={() => setSection('PROFILE')}>⚙️ Profile</p>
+        <h3>Manager Panel</h3>
+        <p onClick={() => setSection('DASHBOARD')}>Dashboard</p>
+        <p onClick={() => setSection('ADD_DRIVER')}>Add Driver</p>
+        <p onClick={() => setSection('PROFILE')}>Profile</p>
       </div>
 
       <div className="admin-content">
