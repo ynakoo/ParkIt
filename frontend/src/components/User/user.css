@@ -9,31 +9,38 @@
 }
 
 .current-ticket {
-  background: #fff3cd;
+  background: var(--primary-soft);
   padding: 20px;
   border-radius: 12px;
   margin: 20px 0;
-  border-left: 4px solid #f39c12;
+  border-left: 4px solid var(--primary);
 }
 
 .ticket-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
+  background: var(--surface);
+  padding: 24px;
+  border-radius: 12px;
   margin-top: 10px;
+  border: 1px solid var(--border);
 }
 
 .btn-park {
   width: 100%;
-  padding: 20px;
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  color: white;
+  padding: 16px;
+  background: var(--primary);
+  color: var(--surface);
   border: none;
-  border-radius: 12px;
-  font-size: 20px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 500;
   cursor: pointer;
   margin: 20px 0;
+  transition: transform 0.2s;
+}
+
+.btn-park:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .ticket-history {
@@ -41,13 +48,14 @@
 }
 
 .ticket-item {
-  background: white;
-  padding: 15px;
+  background: var(--surface);
+  padding: 16px 20px;
   border-radius: 8px;
-  margin: 10px 0;
+  margin: 12px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid var(--border);
 }
 
 .scan-qr, .select-car, .make-payment, .ticket-view {
@@ -61,31 +69,45 @@
 }
 
 .btn-back {
-  background: #666;
-  color: white;
-  border: none;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 20px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: var(--border);
+  color: var(--text-primary);
 }
 
 .qr-scanner {
-  background: #f5f5f5;
+  background: var(--surface-soft);
   padding: 60px;
   text-align: center;
   border-radius: 12px;
   margin: 20px 0;
+  border: 1px dashed var(--border);
 }
 
 .btn-simulate {
-  background: #e74c3c;
-  color: white;
+  background: var(--primary);
+  color: var(--surface);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 20px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-simulate:hover {
+  background: var(--primary-hover);
 }
 
 .parking-list, .car-list {
@@ -95,41 +117,47 @@
 }
 
 .parking-item, .car-item {
-  background: white;
-  padding: 15px;
+  background: var(--surface);
+  padding: 16px 20px;
   border-radius: 8px;
   cursor: pointer;
-  border: 2px solid #e0e0e0;
-  transition: all 0.3s;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
 
 .parking-item:hover, .car-item:hover {
-  border-color: #e74c3c;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+  border-color: var(--primary);
+  background: var(--primary-soft);
 }
 
 .btn-secondary {
-  background: #666;
-  color: white;
-  border: none;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
   margin: 10px 0;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--surface-soft);
 }
 
 .add-car-form {
-  background: #f5f5f5;
+  background: var(--surface-soft);
   padding: 15px;
   border-radius: 8px;
   margin-top: 15px;
+  border: 1px solid var(--border);
 }
 
 @media (min-width: 768px) {
   .add-car-form {
-    padding: 20px;
+    padding: 24px;
   }
 }
 
@@ -137,43 +165,54 @@
   width: 100%;
   padding: 12px;
   margin: 8px 0;
-  border: 2px solid #e0e0e0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   box-sizing: border-box;
+  background: var(--surface);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.add-car-form input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .btn-primary {
-  background: #27ae60;
-  color: white;
+  background: var(--primary);
+  color: var(--surface);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
 .btn-primary:hover {
-  background: #229954;
+  background: var(--primary-hover);
 }
 
 .payment-details {
-  background: white;
-  padding: 15px;
+  background: var(--surface);
+  padding: 16px;
   border-radius: 12px;
-  margin: 20px 0;
+  margin: 24px 0;
+  border: 1px solid var(--border);
 }
 
 @media (min-width: 768px) {
   .payment-details {
-    padding: 20px;
+    padding: 24px;
   }
 }
 
 .detail-section {
   margin: 20px 0;
   padding-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px dashed var(--border);
 }
 
 .detail-section:last-child {
@@ -187,22 +226,29 @@
 }
 
 .price-row.total {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px solid #333;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
   font-size: 18px;
+  color: var(--text-primary);
 }
 
 .btn-pay {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-  color: white;
+  background: var(--primary);
+  color: var(--surface);
   border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-pay:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .btn-pay:disabled {
@@ -215,7 +261,8 @@
 }
 
 .info-text {
-  color: #666;
-  font-style: italic;
-  margin-top: 15px;
+  color: var(--text-muted);
+  font-style: normal;
+  margin-top: 12px;
+  font-size: 14px;
 }
