@@ -7,16 +7,16 @@
 }
 
 .status-badge.available {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--success-soft);
+  color: var(--success-text);
 }
 
 .status-badge.inactive {
-  background: #fff3e0;
-  color: #e65100;
+  background: var(--warning-soft);
+  color: var(--warning-text);
 }
 
 .status-badge.busy {
-  background: #ffebee;
-  color: #c62828;
+  background: var(--error-soft);
+  color: var(--error-text);
 }

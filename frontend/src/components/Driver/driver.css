@@ -1,9 +1,9 @@
 .driver-info-card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
+  background: var(--surface);
+  padding: 24px;
+  border-radius: 8px;
   margin-bottom: 30px;
-  border: 2px solid #3498db;
+  border: 1px solid var(--border);
 }
 
 .stats-grid {
@@ -14,19 +14,18 @@
 }
 
 .stat-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
+  background: var(--surface);
+  padding: 24px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  border-color: var(--primary);
 }
 
 .stat-icon {
@@ -34,23 +33,26 @@
 }
 
 .stat-info h3 {
-  font-size: 32px;
-  color: #1e3c72;
+  font-size: 28px;
+  color: var(--text-primary);
   margin: 0 0 5px 0;
 }
 
 .stat-info p {
-  color: #666;
+  color: var(--text-secondary);
   margin: 0;
   font-size: 14px;
 }
 
 .active-section {
-  background: #fff3cd;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  border-left: 4px solid #f39c12;
+  background: var(--primary-soft);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--primary);
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .requests-section {
@@ -58,29 +60,29 @@
 }
 
 .request-card {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  margin: 15px 0;
-  border: 2px solid #e0e0e0;
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border: 1px solid var(--border);
 }
 
 .request-card.active {
-  border-color: #f39c12;
-  background: #fff;
+  border-color: var(--primary);
+  background: var(--surface-soft);
 }
 
 .request-card h4 {
-  color: #1e3c72;
-  margin-bottom: 10px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
 }
 
 .btn-accept {
-  background: #27ae60;
-  color: white;
+  background: var(--success);
+  color: var(--surface);
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   width: 100%;
   margin-top: 10px;
@@ -88,15 +90,15 @@
 }
 
 .btn-accept:hover {
-  background: #229954;
+  background: var(--success-hover);
 }
 
 .btn-complete {
-  background: #e74c3c;
-  color: white;
+  background: var(--primary);
+  color: var(--surface);
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   width: 100%;
   margin-top: 10px;
@@ -104,7 +106,7 @@
 }
 
 .btn-complete:hover {
-  background: #c0392b;
+  background: var(--primary-hover);
 }
 
 @media (max-width: 768px) {
