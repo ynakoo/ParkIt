@@ -11,21 +11,26 @@ function MakePayment({ onBack, parkingArea, car, onPaymentComplete }) {
   const total = subtotal + tax;
 
   const handlePayment = async () => {
-    setLoading(true);
-    const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/tickets', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        carId: car.id,
-        parkingAreaId: parkingArea.id
-      })
-    });
-    const ticket = await res.json();
-    setLoading(false);
-    onPaymentComplete(ticket);
+    try {
+      setLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/tickets`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          carId: car.id,
+          parkingAreaId: parkingArea.id
+        })
+      });
+      const ticket = await res.json();
+      onPaymentComplete(ticket);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,7 +55,7 @@ function MakePayment({ onBack, parkingArea, car, onPaymentComplete }) {
           <h3>Price Breakdown</h3>
           <div className="price-row">
             <span>Hourly Rate:</span>
-            <span>${hourlyRate.toFixed(2)}/hr</span>
+            <span>₹{hourlyRate.toFixed(2)}/hr</span>
           </div>
           <div className="price-row">
             <span>Estimated Duration:</span>
@@ -58,15 +63,15 @@ function MakePayment({ onBack, parkingArea, car, onPaymentComplete }) {
           </div>
           <div className="price-row">
             <span>Subtotal:</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>₹{subtotal.toFixed(2)}</span>
           </div>
           <div className="price-row">
             <span>Tax (10%):</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>₹{tax.toFixed(2)}</span>
           </div>
           <div className="price-row total">
             <span><strong>Total:</strong></span>
-            <span><strong>${total.toFixed(2)}</strong></span>
+            <span><strong>₹{total.toFixed(2)}</strong></span>
           </div>
         </div>
       </div>

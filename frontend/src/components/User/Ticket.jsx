@@ -1,7 +1,7 @@
 function Ticket({ ticket, onDone }) {
   return (
     <div className="ticket-view">
-      <h2>✅ Ticket Created</h2>
+      <h2>Ticket Created</h2>
       <div className="ticket-card">
         <h3>Ticket #{ticket.ticketNumber}</h3>
         <p><strong>Status:</strong> <span className="status-badge">{ticket.status}</span></p>

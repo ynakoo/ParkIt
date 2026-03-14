@@ -4,25 +4,35 @@ import './user.css';
 function Dashboard({ user, onNavigate }) {
   const [tickets, setTickets] = useState([]);
   const [currentTicket, setCurrentTicket] = useState(null);
+  const [_loading, setLoading] = useState(true);
   const token = localStorage.getItem('authToken');
 
+
+  const fetchTickets = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/tickets`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      setTickets(data);
+      const active = data.find(t => !['COMPLETED'].includes(t.status));
+      setCurrentTicket(active);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
     fetchTickets();
   }, []);
 
-  const fetchTickets = async () => {
-    const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/tickets', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await res.json();
-    setTickets(data);
-    const active = data.find(t => !['COMPLETED'].includes(t.status));
-    setCurrentTicket(active);
-  };
-
   const handleRetrieval = async () => {
     try {
-      const res = await fetch('${import.meta.env.VITE_API_URL}/api/user/request-retrieval', {
+      setLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/request-retrieval`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,6 +50,8 @@ function Dashboard({ user, onNavigate }) {
     } catch (error) {
       console.error('Error:', error);
       alert('Error sending retrieval request');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,13 +74,13 @@ function Dashboard({ user, onNavigate }) {
               <p className="info-text">Retrieval request sent, waiting for driver...</p>
             )}
             {currentTicket.status === 'CAR_ON_THE_WAY' && (
-              <p className="info-text">Driver is on the way to retrieve your car</p>
+              <p className="info-text">Driver is on the way to retrieve your car!</p>
             )}
           </div>
         </div>
       )}
 
-      <button onClick={() => onNavigate('SCAN_QR')} className="btn-park">🅿️ Park Now</button>
+      <button onClick={() => onNavigate('SCAN_QR')} className="btn-park">Park Now</button>
 
       <div className="ticket-history">
         <h3>Ticket History</h3>
