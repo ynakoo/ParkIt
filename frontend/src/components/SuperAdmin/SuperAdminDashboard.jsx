@@ -51,12 +51,12 @@ function SuperAdminDashboard() {
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <h3>🅿️ ParkIt Admin</h3>
-        <p onClick={() => setSection("DASHBOARD")}>📊 Dashboard</p>
-        <p onClick={() => setSection("ADD_MANAGER")}>👤 Add Manager</p>
-        <p onClick={() => setSection("ADD_PARKING")}>🅿️ Add Parking</p>
-        <p onClick={() => setSection("DRIVER_REQUESTS")}>🚗 Driver Requests</p>
-        <p onClick={() => setSection("PROFILE")}>⚙️ Profile</p>
+        <h3>ParkIt Admin</h3>
+        <p onClick={() => setSection("DASHBOARD")}>Dashboard</p>
+        <p onClick={() => setSection("ADD_MANAGER")}>Add Manager</p>
+        <p onClick={() => setSection("ADD_PARKING")}>Add Parking</p>
+        <p onClick={() => setSection("DRIVER_REQUESTS")}>Driver Requests</p>
+        <p onClick={() => setSection("PROFILE")}>Profile</p>
       </div>
 
       <div className="admin-content">

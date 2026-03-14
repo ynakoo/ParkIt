@@ -2,22 +2,30 @@ import { useEffect, useState } from "react";
 
 function ParkingList({ onSelect }) {
   const [parkingAreas, setParkingAreas] = useState([]);
+  const [_loading, setLoading] = useState(true);
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchParking = async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        }
-      );
+        );
 
-      const data = await res.json();
-      console.log(data)
-      setParkingAreas(data);
+        const data = await res.json();
+        console.log(data);
+        setParkingAreas(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchParking();
@@ -30,9 +38,9 @@ function ParkingList({ onSelect }) {
         {parkingAreas.map((area) => (
           <div key={area.id} className="parking-card">
             <h3>{area.name}</h3>
-            <p>📍 Location: {area.location}</p>
-            <p>👤 Manager: {area.manager?.name || "Not Assigned"}</p>
-            <p>💵 Rate: ${area.amount}/hr</p>
+            <p>Location: {area.location}</p>
+            <p>Manager: {area.manager?.name || "Not Assigned"}</p>
+            <p>Rate: ₹{area.amount}/hr</p>
             <button onClick={() => onSelect(area)}>View Details</button>
           </div>
         ))}

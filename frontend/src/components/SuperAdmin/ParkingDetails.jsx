@@ -2,23 +2,31 @@ import { useEffect, useState } from 'react';
 
 function ParkingDetails({ area, onBack }) {
   const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas/${area.id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      const data = await res.json();
-      setDetails(data);
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas/${area.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        const data = await res.json();
+        setDetails(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchDetails();
   }, [area.id,token]);
 
-  if (!details) return <p>Loading...</p>;
+  if (loading || !details) return <p>Loading...</p>;
 
   return (
     <div>
@@ -29,7 +37,7 @@ function ParkingDetails({ area, onBack }) {
       <div className="profile-card" style={{ maxWidth: '600px' }}>
         <p><strong>Location:</strong> {details.location}</p>
         <p><strong>QR Code:</strong> {details.qrCode}</p>
-        <p><strong>Rate:</strong> ${details.amount}/hr</p>
+        <p><strong>Rate:</strong> ₹{details.amount}/hr</p>
         <p><strong>Manager:</strong> {details.manager?.name || 'Not Assigned'}</p>
         <p><strong>Status:</strong> {details.status}</p>
       </div>
@@ -43,8 +51,8 @@ function ParkingDetails({ area, onBack }) {
             <div key={driver.userId} className="driver-item">
               <div>
                 <strong>{driver.user.name}</strong>
-                <p style={{margin: '4px 0', color: '#666'}}>{driver.user.email}</p>
-                <p style={{margin: '4px 0', color: '#666'}}>DL: {driver.dlNumber}</p>
+                <p style={{margin: '4px 0'}}>{driver.user.email}</p>
+                <p style={{margin: '4px 0'}}>DL: {driver.dlNumber}</p>
               </div>
               <span className={`status-badge ${driver.status.toLowerCase()}`}>
                 {driver.status}
@@ -63,7 +71,7 @@ function ParkingDetails({ area, onBack }) {
             <div key={ticket.ticketNumber} className="driver-item">
               <div>
                 <strong>Ticket #{ticket.ticketNumber}</strong>
-                <p style={{margin: '4px 0', color: '#666'}}>Status: {ticket.status}</p>
+                <p style={{margin: '4px 0'}}>Status: {ticket.status}</p>
               </div>
             </div>
           ))

@@ -5,28 +5,36 @@ function AddParking() {
   const [location, setLocation] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [amount, setAmount] = useState("");
+  const [_loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("authToken");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await fetch(
-      `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          name,
-          location,
-          qrCode: qrCode,
-          amount: Number(amount)
-        })
-      }
-    );
+    try {
+      setLoading(true);
+      await fetch(
+        `${import.meta.env.VITE_API_URL}/api/superAdmin/parking-areas`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            name,
+            location,
+            qrCode: qrCode,
+            amount: Number(amount)
+          })
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
 
     alert("Parking Area Created");
     setName("");
