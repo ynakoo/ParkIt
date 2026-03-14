@@ -17,17 +17,17 @@ function DriverDashboard() {
       case 'PROFILE':
         return <DriverProfile />;
       default:
-        return null;
+        return <DriverStats />;
     }
   };
 
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <h3>🚗 Driver Panel</h3>
-        <p onClick={() => setSection('DASHBOARD')}>📊 Dashboard</p>
-        <p onClick={() => setSection('REQUESTS')}>📋 Requests</p>
-        <p onClick={() => setSection('PROFILE')}>⚙️ Profile</p>
+        <h3>Driver Panel</h3>
+        <p onClick={() => setSection('DASHBOARD')}>Dashboard</p>
+        <p onClick={() => setSection('REQUESTS')}>Requests</p>
+        <p onClick={() => setSection('PROFILE')}>Profile</p>
       </div>
 
       <div className="admin-content">
