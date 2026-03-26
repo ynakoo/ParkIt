@@ -30,13 +30,14 @@ ParkIt is a comprehensive parking management solution designed to streamline the
 ## Key Features by Role
 
 ### SuperAdmin
+- Create and manage parking areas.
+- Appoint managers to parking areas.
 - Overall system management.
 - User and role administration.
 - Monitoring system performance and logs.
 
 ### Manager
-- Create and manage parking areas.
-- Monitor active tickets and driver assignments within their area.
+- Monitor active tickets and driver assignments within their appointed area.
 - View parking area statistics and performance.
 
 ### Driver
