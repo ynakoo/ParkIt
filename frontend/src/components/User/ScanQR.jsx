@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function ScanQR({ onBack, onParkingSelected }) {
+function ScanQR() {
   const [parkingAreas, setParkingAreas] = useState([]);
   const token = localStorage.getItem('authToken');
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchAreas = async () => {
       try {
@@ -24,7 +27,6 @@ function ScanQR({ onBack, onParkingSelected }) {
 
   return (
     <div className="scan-qr">
-      <button onClick={onBack} className="btn-back">← Back</button>
       <h2>Select Parking Area</h2>
       
       <div className="parking-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginTop: '24px' }}>
@@ -32,7 +34,7 @@ function ScanQR({ onBack, onParkingSelected }) {
           <p>No active parking areas available</p>
         ) : (
           parkingAreas.map(area => (
-            <div key={area.id} className="parking-item" onClick={() => onParkingSelected(area)}>
+            <div key={area.id} className="parking-item" onClick={() => navigate('/select-car', { state: { parkingArea: area } })}>
               <h4>{area.name}</h4>
               <p>{area.location}</p>
               <p style={{ fontWeight: '600' }}>₹{area.amount}/hr</p>

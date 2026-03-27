@@ -5,7 +5,7 @@ function AddParking() {
   const [location, setLocation] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [amount, setAmount] = useState("");
-  const [_loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("authToken");
 
@@ -88,7 +88,9 @@ function AddParking() {
           />
         </div>
 
-        <button type="submit">Add Parking Area</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Adding...' : 'Add Parking Area'}
+        </button>
       </form>
     </div>
   );

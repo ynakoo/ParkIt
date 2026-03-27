@@ -4,6 +4,7 @@ function DriverRequests() {
   const [requests, setRequests] = useState([]);
   const [activeTickets, setActiveTickets] = useState([]);
   const [_loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState({});
   const token = localStorage.getItem('authToken');
 
   const fetchRequests = async () => {
@@ -56,7 +57,7 @@ function DriverRequests() {
 
   const handleAccept = async (requestId) => {
     try {
-      setLoading(true);
+      setActionLoading(prev => ({ ...prev, [`accept-${requestId}`]: true }));
       await fetch(`${import.meta.env.VITE_API_URL}/api/driver/accept-request`, {
         method: 'POST',
         headers: {
@@ -70,13 +71,13 @@ function DriverRequests() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setActionLoading(prev => ({ ...prev, [`accept-${requestId}`]: false }));
     }
   };
 
   const handleCompleteParking = async (ticketNumber) => {
     try {
-      setLoading(true);
+      setActionLoading(prev => ({ ...prev, [`parking-${ticketNumber}`]: true }));
       await fetch(`${import.meta.env.VITE_API_URL}/api/driver/complete-parking`, {
         method: 'POST',
         headers: {
@@ -89,13 +90,13 @@ function DriverRequests() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setActionLoading(prev => ({ ...prev, [`parking-${ticketNumber}`]: false }));
     }
   };
 
   const handleCompleteRetrieval = async (ticketNumber) => {
     try {
-      setLoading(true);
+      setActionLoading(prev => ({ ...prev, [`retrieval-${ticketNumber}`]: true }));
       await fetch(`${import.meta.env.VITE_API_URL}/api/driver/complete-retrieval`, {
         method: 'POST',
         headers: {
@@ -108,7 +109,7 @@ function DriverRequests() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setActionLoading(prev => ({ ...prev, [`retrieval-${ticketNumber}`]: false }));
     }
   };
 
@@ -127,13 +128,21 @@ function DriverRequests() {
               <p><strong>Customer:</strong> {req?.ticket?.user?.name}</p>
               <p><strong>Location:</strong> {req?.ticket?.parkingArea?.name}</p>
               {req.requestType === 'PARKING' && req?.ticket?.status === 'DRIVER_ASSIGNED' && (
-                <button onClick={() => handleCompleteParking(req.ticket.ticketNumber)} className="btn-complete">
-                  Complete Parking
+                <button
+                  onClick={() => handleCompleteParking(req.ticket.ticketNumber)}
+                  className="btn-complete"
+                  disabled={actionLoading[`parking-${req.ticket.ticketNumber}`]}
+                >
+                  {actionLoading[`parking-${req.ticket.ticketNumber}`] ? 'Completing...' : 'Complete Parking'}
                 </button>
               )}
               {req.requestType === 'RETRIEVAL' && req?.ticket?.status === 'CAR_ON_THE_WAY' && (
-                <button onClick={() => handleCompleteRetrieval(req.ticket.ticketNumber)} className="btn-complete">
-                  Complete Retrieval
+                <button
+                  onClick={() => handleCompleteRetrieval(req.ticket.ticketNumber)}
+                  className="btn-complete"
+                  disabled={actionLoading[`retrieval-${req.ticket.ticketNumber}`]}
+                >
+                  {actionLoading[`retrieval-${req.ticket.ticketNumber}`] ? 'Completing...' : 'Complete Retrieval'}
                 </button>
               )}
             </div>
@@ -153,8 +162,12 @@ function DriverRequests() {
               <p><strong>Car:</strong> {req?.ticket?.car?.brand} {req?.ticket?.car?.model}</p>
               <p><strong>Customer:</strong> {req?.ticket?.user?.name}</p>
               <p><strong>Location:</strong> {req?.ticket?.parkingArea?.name}</p>
-              <button onClick={() => handleAccept(req.id)} className="btn-accept">
-                Accept Request
+              <button
+                onClick={() => handleAccept(req.id)}
+                className="btn-accept"
+                disabled={actionLoading[`accept-${req.id}`]}
+              >
+                {actionLoading[`accept-${req.id}`] ? 'Accepting...' : 'Accept Request'}
               </button>
             </div>
           ))

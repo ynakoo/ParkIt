@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-function SelectCar({ onBack, parkingArea, onCarSelected }) {
+function SelectCar() {
   const [cars, setCars] = useState([]);
   const [showAddCar, setShowAddCar] = useState(false);
   const [newCar, setNewCar] = useState({ plateNumber: '', brand: '', model: '', color: '' });
-  const [_loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [addCarLoading, setAddCarLoading] = useState(false);
   const token = localStorage.getItem('authToken');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const parkingArea = location.state?.parkingArea;
 
   useEffect(() => {
+    if (!parkingArea) {
+      navigate('/scan-qr', { replace: true });
+      return;
+    }
     fetchCars();
   }, []);
 
@@ -29,7 +38,7 @@ function SelectCar({ onBack, parkingArea, onCarSelected }) {
   const handleAddCar = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      setAddCarLoading(true);
       await fetch(`${import.meta.env.VITE_API_URL}/api/user/cars`, {
         method: 'POST',
         headers: {
@@ -44,19 +53,20 @@ function SelectCar({ onBack, parkingArea, onCarSelected }) {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setAddCarLoading(false);
     }
   };
 
+  if (!parkingArea) return null;
+
   return (
     <div className="select-car">
-      <button onClick={onBack} className="btn-back">← Back</button>
       <h2>Select Your Car</h2>
       <p style={{ marginBottom: '24px' }}>Parking at: <strong>{parkingArea.name}</strong></p>
 
       <div className="car-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
         {cars.map(car => (
-          <div key={car.id} className="car-item" onClick={() => onCarSelected(car)}>
+          <div key={car.id} className="car-item" onClick={() => navigate('/payment', { state: { parkingArea, car } })}>
             <h4>{car.brand} {car.model}</h4>
             <p style={{ marginTop: '4px' }}>{car.plateNumber} • {car.color}</p>
           </div>
@@ -93,7 +103,9 @@ function SelectCar({ onBack, parkingArea, onCarSelected }) {
             onChange={(e) => setNewCar({...newCar, color: e.target.value})}
             required
           />
-          <button type="submit" className="btn-primary">Add Car</button>
+          <button type="submit" className="btn-primary" disabled={addCarLoading}>
+            {addCarLoading ? 'Adding...' : 'Add Car'}
+          </button>
         </form>
       )}
     </div>

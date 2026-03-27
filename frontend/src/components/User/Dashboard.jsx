@@ -1,12 +1,22 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './user.css';
 
-function Dashboard({ user, onNavigate }) {
+function Dashboard() {
   const [tickets, setTickets] = useState([]);
   const [currentTicket, setCurrentTicket] = useState(null);
-  const [_loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [retrievalLoading, setRetrievalLoading] = useState(false);
   const token = localStorage.getItem('authToken');
+  const navigate = useNavigate();
 
+  let user = { name: '' };
+  try {
+    const saved = localStorage.getItem('currentUser');
+    if (saved) user = JSON.parse(saved);
+  } catch (e) {
+    console.error(e);
+  }
 
   const fetchTickets = async () => {
     try {
@@ -31,7 +41,7 @@ function Dashboard({ user, onNavigate }) {
 
   const handleRetrieval = async () => {
     try {
-      setLoading(true);
+      setRetrievalLoading(true);
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/request-retrieval`, {
         method: 'POST',
         headers: {
@@ -51,7 +61,7 @@ function Dashboard({ user, onNavigate }) {
       console.error('Error:', error);
       alert('Error sending retrieval request');
     } finally {
-      setLoading(false);
+      setRetrievalLoading(false);
     }
   };
 
@@ -68,7 +78,9 @@ function Dashboard({ user, onNavigate }) {
             <p><strong>Parking:</strong> {currentTicket.parkingArea.name}</p>
             <p><strong>Status:</strong> <span className="status-badge">{currentTicket.status}</span></p>
             {currentTicket.status === 'PARKED' && !currentTicket.requests?.some(r => r.requestType === 'RETRIEVAL' && r.status === 'PENDING') && (
-              <button onClick={handleRetrieval} className="btn-primary">Request Retrieval</button>
+              <button onClick={handleRetrieval} className="btn-primary" disabled={retrievalLoading}>
+                {retrievalLoading ? 'Requesting...' : 'Request Retrieval'}
+              </button>
             )}
             {currentTicket.status === 'PARKED' && currentTicket.requests?.some(r => r.requestType === 'RETRIEVAL' && r.status === 'PENDING') && (
               <p className="info-text">Retrieval request sent, waiting for driver...</p>
@@ -80,7 +92,7 @@ function Dashboard({ user, onNavigate }) {
         </div>
       )}
 
-      <button onClick={() => onNavigate('SCAN_QR')} className="btn-park">Park Now</button>
+      <button onClick={() => navigate('/scan-qr')} className="btn-park">Park Now</button>
 
       <div className="ticket-history">
         <h3>Ticket History</h3>

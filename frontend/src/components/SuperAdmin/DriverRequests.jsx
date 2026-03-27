@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 function DriverRequests() {
   const [drivers, setDrivers] = useState([]);
   const [_loading, setLoading] = useState(true);
+  const [approveLoading, setApproveLoading] = useState({});
   const token = localStorage.getItem("authToken");
 
   const fetchDrivers = async () => {
@@ -28,7 +29,7 @@ function DriverRequests() {
 
   const approveDriver = async (id) => {
     try {
-      setLoading(true);
+      setApproveLoading(prev => ({ ...prev, [id]: true }));
       await fetch(
         `${import.meta.env.VITE_API_URL}/api/superAdmin/approve-driver/${id}`,
         {
@@ -43,7 +44,7 @@ function DriverRequests() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setApproveLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
@@ -66,8 +67,11 @@ function DriverRequests() {
                 <p style={{margin: '4px 0'}}>DL: {driver.dlNumber}</p>
                 <p style={{margin: '4px 0'}}>Parking: {driver.parkingArea.name}</p>
               </div>
-              <button onClick={() => approveDriver(driver.userId)}>
-                Approve
+              <button
+                onClick={() => approveDriver(driver.userId)}
+                disabled={approveLoading[driver.userId]}
+              >
+                {approveLoading[driver.userId] ? 'Approving...' : 'Approve'}
               </button>
             </div>
           ))

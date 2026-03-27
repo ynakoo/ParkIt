@@ -5,7 +5,7 @@ function AddDriver() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [dlNumber, setDlNumber] = useState('');
-  const [_loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('authToken');
 
   const handleSubmit = async (e) => {
@@ -82,7 +82,9 @@ function AddDriver() {
           />
         </div>
 
-        <button type="submit">Add Driver</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Adding...' : 'Add Driver'}
+        </button>
       </form>
     </div>
   );

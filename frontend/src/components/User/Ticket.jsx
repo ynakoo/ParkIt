@@ -1,4 +1,10 @@
-function Ticket({ ticket, onDone }) {
+import { useNavigate, useLocation } from 'react-router-dom';
+
+function Ticket() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const ticket = location.state?.ticket || { ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED' };
+
   return (
     <div className="ticket-view">
       <h2>Ticket Created</h2>
@@ -8,7 +14,7 @@ function Ticket({ ticket, onDone }) {
         <p>Waiting for driver assignment...</p>
         <p className="info-text">You will be notified when a driver accepts your request</p>
       </div>
-      <button onClick={onDone} className="btn-primary">Done</button>
+      <button onClick={() => navigate('/dashboard')} className="btn-primary">Done</button>
     </div>
   );
 }

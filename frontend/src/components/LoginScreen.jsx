@@ -1,15 +1,45 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './auth.css';
 
-function LoginScreen({ onNavigate, onLogin }) {
+const ROLE_DASHBOARD = {
+  USER: '/dashboard',
+  DRIVER: '/driver',
+  MANAGER: '/manager',
+  SUPERADMIN: '/admin'
+};
+
+function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const submit = async e => {
     e.preventDefault();
-    const res = await onLogin(email.trim(), password);
-    if (!res.success) setError(res.message);
+    try {
+      setLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password })
+      });
+
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+        return;
+      }
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+      navigate(ROLE_DASHBOARD[data.user.role] || '/dashboard', { replace: true });
+    } catch (err) {
+      console.error(err);
+      setError('Server error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,11 +77,13 @@ function LoginScreen({ onNavigate, onLogin }) {
             />
           </div>
 
-          <button type="submit" className="auth-btn">Sign In</button>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
+          </button>
           
           <div className="auth-footer">
             <span>Don't have an account?</span>
-            <button type="button" className="link-btn" onClick={() => onNavigate('REGISTER')}>
+            <button type="button" className="link-btn" onClick={() => navigate('/register')}>
               Sign Up
             </button>
           </div>

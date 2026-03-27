@@ -1,4 +1,13 @@
-# React + Vite
+# ParkIt
+
+## Test Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| Super Admin | koyna@gmail.com | 123456 |
+| Driver | swarnim@gmail.com | 123456 |
+| User | ashwin@gmail.com | 123456 |
+| Manager | aparajita@gmail.com | 123456 |
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

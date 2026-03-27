@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './auth.css';
 
-function Register({ onNavigate }) {
+function Register() {
   const [form, setForm] = useState({ name:'', email:'', password:'' });
   const [msg, setMsg] = useState('');
-  const [_loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const submit = async e => {
     e.preventDefault();
@@ -20,7 +22,7 @@ function Register({ onNavigate }) {
         setMsg(data.error);
       } else {
         setMsg('Registered! Redirecting to login...');
-        setTimeout(() => onNavigate('LOGIN'), 1200);
+        setTimeout(() => navigate('/login'), 1200);
       }
     } catch (e) {
       setMsg(e.message);
@@ -72,11 +74,13 @@ function Register({ onNavigate }) {
             />
           </div>
 
-          <button type="submit" className="auth-btn">Sign Up</button>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? 'Signing Up...' : 'Sign Up'}
+          </button>
           
           <div className="auth-footer">
             <span>Already have an account?</span>
-            <button type="button" className="link-btn" onClick={() => onNavigate('LOGIN')}>
+            <button type="button" className="link-btn" onClick={() => navigate('/login')}>
               Sign In
             </button>
           </div>

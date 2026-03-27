@@ -1,8 +1,22 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-function MakePayment({ onBack, parkingArea, car, onPaymentComplete }) {
+function MakePayment() {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('authToken');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const parkingArea = location.state?.parkingArea;
+  const car = location.state?.car;
+
+  if (!parkingArea || !car) {
+    return (
+      <div className="make-payment">
+        <p>Missing parking or car data.</p>
+        <button onClick={() => navigate('/scan-qr')} className="btn-primary">Go to Parking</button>
+      </div>
+    );
+  }
 
   const hourlyRate = parseFloat(parkingArea.amount);
   const estimatedHours = 2;
@@ -25,7 +39,7 @@ function MakePayment({ onBack, parkingArea, car, onPaymentComplete }) {
         })
       });
       const ticket = await res.json();
-      onPaymentComplete(ticket);
+      navigate('/ticket', { state: { ticket }, replace: true });
     } catch (error) {
       console.error(error);
     } finally {
@@ -35,7 +49,6 @@ function MakePayment({ onBack, parkingArea, car, onPaymentComplete }) {
 
   return (
     <div className="make-payment">
-      <button onClick={onBack} className="btn-back">← Back</button>
       <h2>Payment Summary</h2>
 
       <div className="payment-details">

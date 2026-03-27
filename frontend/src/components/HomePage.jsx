@@ -1,13 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import './home.css';
 
-function HomePage({ onNavigate }) {
+function HomePage() {
+  const navigate = useNavigate();
+
   return (
     <div className="home-container">
       <nav className="home-nav">
         <div className="logo">ParkIt</div>
         <div className="nav-links">
-          <button onClick={() => onNavigate('LOGIN')} className="nav-btn">Login</button>
-          <button onClick={() => onNavigate('REGISTER')} className="nav-btn-primary">Sign Up</button>
+          <button onClick={() => navigate('/login')} className="nav-btn">Login</button>
+          <button onClick={() => navigate('/register')} className="nav-btn-primary">Sign Up</button>
         </div>
       </nav>
 
@@ -15,7 +18,7 @@ function HomePage({ onNavigate }) {
         <div className="hero-content">
           <h1>Smart Parking Made Simple</h1>
           <p>Experience hassle-free valet parking with real-time tracking and seamless payment</p>
-          <button onClick={() => onNavigate('REGISTER')} className="cta-btn">Get Started</button>
+          <button onClick={() => navigate('/register')} className="cta-btn">Get Started</button>
         </div>
         <div className="hero-image">
           <img src="/parkit_img2.png" alt="ParkIt Valet Service" />

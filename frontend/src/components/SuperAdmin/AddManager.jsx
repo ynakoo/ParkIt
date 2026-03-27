@@ -6,7 +6,7 @@ function AddManager() {
   const [password, setPassword] = useState("");
   const [parkingAreas, setParkingAreas] = useState([]);
   const [selectedParking, setSelectedParking] = useState("");
-  const [_loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("authToken");
 
@@ -121,7 +121,9 @@ function AddManager() {
           </select>
         </div>
 
-        <button type="submit">Add Manager</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Adding...' : 'Add Manager'}
+        </button>
       </form>
     </div>
   );

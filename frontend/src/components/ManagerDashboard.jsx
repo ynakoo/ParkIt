@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DriverList from './Manager/DriverList';
 import AddDriver from './Manager/AddDriver';
 import Profile from './Manager/Profile';
-import '../components/SuperAdmin/admin.css';
+import './SuperAdmin/admin.css';
 import './Manager/manager.css';
 
 function ManagerDashboard() {

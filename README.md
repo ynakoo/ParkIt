@@ -2,6 +2,16 @@
 
 ParkIt is a comprehensive parking management solution designed to streamline the parking process for users, drivers, and administrators. It features a robust backend for managing parking areas, tickets, and driver assignments, combined with an intuitive frontend for various user roles.
 
+## Test Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| Super Admin | koyna@gmail.com | 123456 |
+| Driver | swarnim@gmail.com | 123456 |
+| User | ashwin@gmail.com | 123456 |
+| Manager | aparajita@gmail.com | 123456 |
+
+
 ## Technology Stack
 
 ### Frontend

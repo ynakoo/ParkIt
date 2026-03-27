@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import LoginScreen from './components/LoginScreen';
 import Register from './components/Register';
@@ -12,195 +13,123 @@ import ManagerDashboard from './components/ManagerDashboard';
 import SuperAdminDashboard from './components/SuperAdmin/SuperAdminDashboard';
 import Layout from './components/Layout';
 
-const ROLE_SCREEN = {
-  USER: 'USER_DASHBOARD',
-  DRIVER: 'DRIVER_DASHBOARD',
-  MANAGER: 'MANAGER_DASHBOARD',
-  SUPERADMIN: 'SUPERADMIN_DASHBOARD'
+const ROLE_DASHBOARD = {
+  USER: '/dashboard',
+  DRIVER: '/driver',
+  MANAGER: '/manager',
+  SUPERADMIN: '/admin'
 };
 
-function App() {
-  const [user, setUser] = useState(null);
-  const [screen, setScreen] = useState('HOME');
-  const [parkingData, setParkingData] = useState({ parkingArea: null, car: null });
-  const [_loading, setLoading] = useState(false);
+function getUser() {
+  try {
+    const token = localStorage.getItem('authToken');
+    const saved = localStorage.getItem('currentUser');
+    if (token && saved) return JSON.parse(saved);
+  } catch (e) {
+    console.error(e);
+    localStorage.clear();
+  }
+  return null;
+}
+
+function ProtectedRoute({ allowedRoles, children }) {
+  const user = getUser();
+  if (!user) return <Navigate to="/login" replace />;
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to={ROLE_DASHBOARD[user.role] || '/login'} replace />;
+  }
+  return children;
+}
+
+function PublicOnly({ children }) {
+  const user = getUser();
+  if (user) return <Navigate to={ROLE_DASHBOARD[user.role] || '/dashboard'} replace />;
+  return children;
+}
+
+function UserLayout({ title, children }) {
+  return (
+    <Layout title={title}>
+      {children}
+    </Layout>
+  );
+}
+
+function AutoRedirect() {
+  const user = getUser();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const savedUser = localStorage.getItem('currentUser');
-    if (token && savedUser) {
-      try {
-        const userData = JSON.parse(savedUser);
-        setUser(userData);
-        setScreen(ROLE_SCREEN[userData.role]);
-      } catch (e) {
-        console.error(e);
-        localStorage.clear();
-      }
+    if (user && location.pathname === '/') {
+      navigate(ROLE_DASHBOARD[user.role] || '/dashboard', { replace: true });
     }
   }, []);
 
-  const handleLogin = async (email, password) => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+  if (user) return null;
+  return <HomePage />;
+}
 
-      const data = await res.json();
-      if (data.error) {
-        return { success: false, message: data.error };
-      }
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('currentUser', JSON.stringify(data.user));
-      setUser(data.user);
-      setScreen(ROLE_SCREEN[data.user.role]);
-      return { success: true };
-    }
-    catch (err) {
-      console.error(err);
-      return { success: false, message: 'server error' };
-    } finally {
-      setLoading(false);
-    }
-  };
+function App() {
+  return (
+    <Routes>
+      {/* Public routes */}
+      <Route path="/" element={<AutoRedirect />} />
+      <Route path="/login" element={<PublicOnly><LoginScreen /></PublicOnly>} />
+      <Route path="/register" element={<PublicOnly><Register /></PublicOnly>} />
 
-  if (screen === 'HOME') {
-    return <HomePage onNavigate={setScreen} />;
-  }
+      {/* User routes */}
+      <Route path="/dashboard" element={
+        <ProtectedRoute allowedRoles={['USER']}>
+          <UserLayout title="User Dashboard"><Dashboard /></UserLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/scan-qr" element={
+        <ProtectedRoute allowedRoles={['USER']}>
+          <UserLayout title="Scan QR"><ScanQR /></UserLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/select-car" element={
+        <ProtectedRoute allowedRoles={['USER']}>
+          <UserLayout title="Select Car"><SelectCar /></UserLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/payment" element={
+        <ProtectedRoute allowedRoles={['USER']}>
+          <UserLayout title="Payment"><MakePayment /></UserLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/ticket" element={
+        <ProtectedRoute allowedRoles={['USER']}>
+          <UserLayout title="Ticket"><Ticket /></UserLayout>
+        </ProtectedRoute>
+      } />
 
-  if (screen === 'LOGIN') {
-    return <LoginScreen onLogin={handleLogin} onNavigate={setScreen} />;
-  }
+      {/* Driver route */}
+      <Route path="/driver" element={
+        <ProtectedRoute allowedRoles={['DRIVER']}>
+          <UserLayout title="Driver Dashboard"><DriverDashboard /></UserLayout>
+        </ProtectedRoute>
+      } />
 
-  if (screen === 'REGISTER') {
-    return <Register onNavigate={setScreen} />;
-  }
+      {/* Manager route */}
+      <Route path="/manager" element={
+        <ProtectedRoute allowedRoles={['MANAGER']}>
+          <UserLayout title="Manager Dashboard"><ManagerDashboard /></UserLayout>
+        </ProtectedRoute>
+      } />
 
-  if (screen === 'USER_DASHBOARD') {
-    return (
-      <Layout
-        title="User Dashboard"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('USER_DASHBOARD')}
-      >
-        <Dashboard user={user} onNavigate={setScreen} />
-      </Layout>
-    );
-  }
+      {/* SuperAdmin route */}
+      <Route path="/admin" element={
+        <ProtectedRoute allowedRoles={['SUPERADMIN']}>
+          <UserLayout title="Super Admin Dashboard"><SuperAdminDashboard /></UserLayout>
+        </ProtectedRoute>
+      } />
 
-  if (screen === 'SCAN_QR') {
-    return (
-      <Layout
-        title="Scan QR"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('USER_DASHBOARD')}
-      >
-        <ScanQR
-          onBack={() => setScreen('USER_DASHBOARD')}
-          onParkingSelected={(area) => {
-            setParkingData({ ...parkingData, parkingArea: area });
-            setScreen('SELECT_CAR');
-          }}
-        />
-      </Layout>
-    );
-  }
-
-  if (screen === 'SELECT_CAR') {
-    return (
-      <Layout
-        title="Select Car"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('USER_DASHBOARD')}
-      >
-        <SelectCar
-          onBack={() => setScreen('SCAN_QR')}
-          parkingArea={parkingData.parkingArea}
-          onCarSelected={(car) => {
-            setParkingData({ ...parkingData, car });
-            setScreen('MAKE_PAYMENT');
-          }}
-        />
-      </Layout>
-    );
-  }
-
-  if (screen === 'MAKE_PAYMENT') {
-    return (
-      <Layout
-        title="Payment"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('USER_DASHBOARD')}
-      >
-        <MakePayment
-          onBack={() => setScreen('SELECT_CAR')}
-          parkingArea={parkingData.parkingArea}
-          car={parkingData.car}
-          onPaymentComplete={() => {
-            setParkingData({ parkingArea: null, car: null });
-            setScreen('TICKET_VIEW');
-          }}
-        />
-      </Layout>
-    );
-  }
-
-  if (screen === 'TICKET_VIEW') {
-    return (
-      <Layout
-        title="Ticket"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('USER_DASHBOARD')}
-      >
-        <Ticket
-          ticket={{ ticketNumber: 'TKT-' + Date.now(), status: 'REQUESTED' }}
-          onDone={() => setScreen('USER_DASHBOARD')}
-        />
-      </Layout>
-    );
-  }
-
-  if (screen === 'DRIVER_DASHBOARD') {
-    return (
-      <Layout
-        title="Driver Dashboard"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('DRIVER_DASHBOARD')}
-      >
-        <DriverDashboard />
-      </Layout>
-    );
-  }
-
-  if (screen === 'MANAGER_DASHBOARD') {
-    return (
-      <Layout
-        title="Manager Dashboard"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('MANAGER_DASHBOARD')}
-      >
-        <ManagerDashboard />
-      </Layout>
-    );
-  }
-
-  if (screen === 'SUPERADMIN_DASHBOARD') {
-    return (
-      <Layout
-        title="Super Admin Dashboard"
-        onLogout={() => { localStorage.clear(); setUser(null); setScreen('LOGIN'); }}
-        onDashboard={() => setScreen('SUPERADMIN_DASHBOARD')}
-      >
-        <SuperAdminDashboard />
-      </Layout>
-    );
-  }
-
-  return <HomePage onNavigate={setScreen} />;
+      {/* Catch-all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 export default App;
-
