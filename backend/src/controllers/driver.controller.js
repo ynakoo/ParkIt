@@ -81,6 +81,24 @@ const acceptRequest = async (req, res) => {
       }
     });
 
+    const driverRecord = await prisma.driver.findUnique({ where: { userId: driverId } });
+    if (driverRecord) {
+      const now = new Date();
+      const lastDate = driverRecord.lastParkingDate ? new Date(driverRecord.lastParkingDate) : new Date(0);
+      
+      if (now.toDateString() !== lastDate.toDateString()) {
+        await prisma.driver.update({
+          where: { userId: driverId },
+          data: { todayParking: 1, lastParkingDate: now }
+        });
+      } else {
+        await prisma.driver.update({
+          where: { userId: driverId },
+          data: { todayParking: { increment: 1 }, lastParkingDate: now }
+        });
+      }
+    }
+
     res.json({ message: 'Request accepted' });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
@@ -172,38 +190,18 @@ const getActiveTickets = async (req, res) => {
 const getStats = async (req, res) => {
   try {
     const driverId = req.user.id;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Today's stats
-    const todayRequests = await prisma.driverRequest.findMany({
-      where: {
-        driverId,
-        status: 'APPROVED',
-        createdAt: { gte: today }
+    const driverRecord = await prisma.driver.findUnique({ where: { userId: driverId } });
+    
+    let todayParking = 0;
+    if (driverRecord && driverRecord.lastParkingDate) {
+      const now = new Date();
+      const lastDate = new Date(driverRecord.lastParkingDate);
+      if (now.toDateString() === lastDate.toDateString()) {
+        todayParking = driverRecord.todayParking;
       }
-    });
+    }
 
-    const todayParking = todayRequests.filter(r => r.requestType === 'PARKING').length;
-    const todayRetrieval = todayRequests.filter(r => r.requestType === 'RETRIEVAL').length;
-
-    // Total stats
-    const totalRequests = await prisma.driverRequest.findMany({
-      where: {
-        driverId,
-        status: 'APPROVED'
-      }
-    });
-
-    const totalParking = totalRequests.filter(r => r.requestType === 'PARKING').length;
-    const totalRetrieval = totalRequests.filter(r => r.requestType === 'RETRIEVAL').length;
-
-    res.json({
-      todayParking,
-      todayRetrieval,
-      totalParking,
-      totalRetrieval
-    });
+    res.json({ todayParking });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
