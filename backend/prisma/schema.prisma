@@ -184,6 +184,8 @@ model Driver {
   parkingAreaId String
   status        DriverStatus    @default(AVAILABLE)
   dlNumber      String          @unique
+  todayParking  Int             @default(0)
+  lastParkingDate DateTime?
   parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   requests      DriverRequest[]
