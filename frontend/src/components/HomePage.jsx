@@ -6,79 +6,83 @@ function HomePage() {
 
   return (
     <div className="home-container">
-      <nav className="home-nav">
-        <div className="logo">ParkIt</div>
+      <nav className="home-nav glass-panel-nav">
+        <div className="logo cursor-pointer" onClick={() => navigate('/')}>
+          <span className="text-gradient">ParkIt</span>
+        </div>
         <div className="nav-links">
           <button onClick={() => navigate('/login')} className="nav-btn">Login</button>
-          <button onClick={() => navigate('/register')} className="nav-btn-primary">Sign Up</button>
+          <button onClick={() => navigate('/register')} className="nav-btn-primary shadow-hover">Sign Up</button>
         </div>
       </nav>
 
       <section className="hero">
         <div className="hero-content">
-          <h1>Smart Parking Made Simple</h1>
-          <p>Experience hassle-free valet parking with real-time tracking and seamless payment</p>
-          <button onClick={() => navigate('/register')} className="cta-btn">Get Started</button>
+          <div className="badge">✨ The Future of Parking</div>
+          <h1>Your Personal <br/><span className="text-gradient">Digital Valet</span></h1>
+          <p>Experience hassle-free parking. Arrive at a location, let our professional drivers take the wheel, and request your car back with a single tap.</p>
+          <div className="hero-buttons">
+            <button onClick={() => navigate('/register')} className="cta-btn shadow-hover">Get Started Now</button>
+            <button onClick={() => document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' })} className="cta-secondary">See How It Works</button>
+          </div>
         </div>
-        <div className="hero-image">
-          <img src="/parkit_img2.png" alt="ParkIt Valet Service" />
-        </div>
-      </section>
-
-      <section className="features">
-        <h2>Why Choose ParkIt?</h2>
-        <div className="feature-grid">
-          <div className="feature-card">
-            <div className="feature-icon"></div>
-            <h3>Valet Service</h3>
-            <p>Professional drivers park and retrieve your car</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon"></div>
-            <h3>Real-Time Tracking</h3>
-            <p>Track your parking request status live</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon"></div>
-            <h3>Easy Payment</h3>
-            <p>Transparent pricing with instant payment</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon"></div>
-            <h3>Quick Service</h3>
-            <p>Fast response from available drivers</p>
+        <div className="hero-image-wrapper">
+          {/* Using a glass panel to frame the image nicely */}
+          <div className="glass-panel image-glass">
+             <img src="/parkit_img2.png" alt="ParkIt Valet Service" className="hero-img" onError={(e) => e.target.style.display = 'none'} />
+             <div className="floating-badge badge-1">🛡️ Fully Insured</div>
+             <div className="floating-badge badge-2">⏱️ 5-min Retrieval</div>
           </div>
         </div>
       </section>
 
-      <section className="how-it-works">
-        <h2>How It Works</h2>
-        <div className="steps">
-          <div className="step">
-            <div className="step-number">1</div>
-            <h3>Select Parking</h3>
-            <p>Choose your parking location</p>
+      <section id="how-it-works" className="lifecycle-section">
+        <h2>How <span className="text-gradient">ParkIt</span> Works</h2>
+        <p className="subtitle">Five simple steps to a stress-free parking experience.</p>
+        
+        <div className="timeline-container glass-panel">
+          <div className="timeline-step">
+            <div className="step-circle hover-grow">1</div>
+            <h3>Select Location</h3>
+            <p>Open the app and choose your parking area upon arrival.</p>
           </div>
-          <div className="step">
-            <div className="step-number">2</div>
-            <h3>Request Valet</h3>
-            <p>A driver accepts your request</p>
+          
+          <div className="timeline-line"></div>
+          
+          <div className="timeline-step">
+            <div className="step-circle hover-grow">2</div>
+            <h3>Select Vehicle</h3>
+            <p>Choose which of your registered cars you're parking today.</p>
           </div>
-          <div className="step">
-            <div className="step-number">3</div>
-            <h3>Car Parked</h3>
-            <p>Your car is safely parked</p>
+          
+          <div className="timeline-line"></div>
+          
+          <div className="timeline-step">
+            <div className="step-circle hover-grow">3</div>
+            <h3>Hand Over Keys</h3>
+            <p>A certified driver will meet you to collect your vehicle.</p>
           </div>
-          <div className="step">
-            <div className="step-number">4</div>
-            <h3>Retrieve Anytime</h3>
-            <p>Request retrieval when ready</p>
+          
+          <div className="timeline-line"></div>
+          
+          <div className="timeline-step">
+            <div className="step-circle hover-grow">4</div>
+            <h3>We Park It</h3>
+            <p>Your car is safely driven to our secure parking facility.</p>
+          </div>
+
+          <div className="timeline-line"></div>
+          
+          <div className="timeline-step">
+            <div className="step-circle hover-grow">5</div>
+            <h3>One-Tap Retrieval</h3>
+            <p>Request your car from your phone when you're ready to leave.</p>
           </div>
         </div>
       </section>
 
-      <footer className="home-footer">
-        <p>&copy; 2024 ParkIt. All rights reserved.</p>
+      <footer className="home-footer glass-panel">
+        <p>&copy; {new Date().getFullYear()} ParkIt. All rights reserved. Your premier digital valet.</p>
       </footer>
     </div>
   );
