@@ -5,8 +5,10 @@ const getDrivers = async (req, res) => {
   try {
     const managerId = req.user.id;
     
-    const parkingArea = await prisma.parkingArea.findUnique({
-      where: { managerId },
+    // Using findFirst instead of findUnique to ensure we handle potential schema discrepancies,
+    // although managerId should be unique.
+    const parkingArea = await prisma.parkingArea.findFirst({
+      where: { managerId: managerId },
       include: {
         drivers: {
           include: {
@@ -17,12 +19,13 @@ const getDrivers = async (req, res) => {
     });
 
     if (!parkingArea) {
-      return res.status(404).json({ error: 'No parking area assigned' });
+      return res.status(404).json({ error: 'No parking area assigned to this manager.' });
     }
 
     res.json(parkingArea.drivers);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    console.error('getDrivers error:', error);
+    res.status(500).json({ error: 'Server error while fetching drivers.' });
   }
 };
 
@@ -72,13 +75,14 @@ const getProfile = async (req, res) => {
     const manager = await prisma.user.findUnique({
       where: { id: managerId },
       include: {
-        parkingArea: true
+        parkingAreas: true // 🔹 Updated to match schema plural naming
       }
     });
 
     res.json(manager);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    console.error('getProfile error:', error);
+    res.status(500).json({ error: 'Server error while fetching profile.' });
   }
 };
 

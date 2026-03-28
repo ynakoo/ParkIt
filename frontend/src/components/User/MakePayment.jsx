@@ -89,8 +89,17 @@ function MakePayment() {
         </div>
       </div>
 
-      <button onClick={handlePayment} className="btn-pay" disabled={loading}>
-        {loading ? 'Processing...' : 'Pay Now'}
+      <button onClick={handlePayment} className="btn-pay shadow-hover" disabled={loading}>
+        {loading ? (
+          <span className="flex-center">
+            <span className="spinner"></span> Processing...
+          </span>
+        ) : (
+          <>
+            <span className="pay-text">Confirm & Pay Securely</span>
+            <span className="pay-amount">₹{total.toFixed(2)}</span>
+          </>
+        )}
       </button>
     </div>
   );

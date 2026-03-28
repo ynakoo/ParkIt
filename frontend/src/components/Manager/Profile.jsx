@@ -25,6 +25,8 @@ function Profile() {
 
   if (loading || !profile) return <p>Loading...</p>;
 
+  const parkingArea = profile.parkingAreas && profile.parkingAreas.length > 0 ? profile.parkingAreas[0] : null;
+
   return (
     <div>
       <h2>Profile</h2>
@@ -32,8 +34,8 @@ function Profile() {
         <p><strong>Name:</strong> {profile.name}</p>
         <p><strong>Email:</strong> {profile.email}</p>
         <p><strong>Role:</strong> {profile.role}</p>
-        <p><strong>Parking Area:</strong> {profile.parkingArea?.name || 'Not Assigned'}</p>
-        <p><strong>Location:</strong> {profile.parkingArea?.location || 'N/A'}</p>
+        <p><strong>Parking Area:</strong> {parkingArea?.name || 'Not Assigned'}</p>
+        <p><strong>Location:</strong> {parkingArea?.location || 'N/A'}</p>
       </div>
     </div>
   );
