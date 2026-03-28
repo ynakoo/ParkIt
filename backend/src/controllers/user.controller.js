@@ -17,6 +17,16 @@ const addCar = async (req, res) => {
     const { plateNumber, brand, model, color } = req.body;
     const userId = req.user.id;
 
+    if (!plateNumber || !/^[A-Za-z0-9 -]+$/.test(plateNumber)) {
+      return res.status(400).json({ error: 'Valid Plate Number is required (alphanumeric)' });
+    }
+    if (!brand || brand.trim().length < 2) {
+      return res.status(400).json({ error: 'Valid brand name is required' });
+    }
+    if (!model || model.trim().length < 2) {
+      return res.status(400).json({ error: 'Valid model name is required' });
+    }
+
     const car = await prisma.car.create({
       data: {
         id: `CAR-${Date.now()}`,
@@ -29,6 +39,57 @@ const addCar = async (req, res) => {
     });
 
     res.status(201).json(car);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const updateCar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { plateNumber, brand, model, color } = req.body;
+    const userId = req.user.id;
+
+    if (!plateNumber || !/^[A-Za-z0-9 -]+$/.test(plateNumber)) {
+      return res.status(400).json({ error: 'Valid Plate Number is required (alphanumeric)' });
+    }
+    if (!brand || brand.trim().length < 2) {
+      return res.status(400).json({ error: 'Valid brand name is required' });
+    }
+    if (!model || model.trim().length < 2) {
+      return res.status(400).json({ error: 'Valid model name is required' });
+    }
+
+    // Verify car belongs to user
+    const existingCar = await prisma.car.findUnique({ where: { id } });
+    if (!existingCar || existingCar.userId !== userId) {
+      return res.status(403).json({ error: 'Not authorized or car not found' });
+    }
+
+    const updatedCar = await prisma.car.update({
+      where: { id },
+      data: { plateNumber, brand, model, color }
+    });
+
+    res.json(updatedCar);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const deleteCar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    // Verify car belongs to user
+    const existingCar = await prisma.car.findUnique({ where: { id } });
+    if (!existingCar || existingCar.userId !== userId) {
+      return res.status(403).json({ error: 'Not authorized or car not found' });
+    }
+
+    await prisma.car.delete({ where: { id } });
+    res.json({ message: 'Car deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -151,6 +212,8 @@ const requestRetrieval = async (req, res) => {
 module.exports = {
   getCars,
   addCar,
+  updateCar,
+  deleteCar,
   getParkingAreas,
   createTicket,
   getTickets,
