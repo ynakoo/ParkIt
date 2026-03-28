@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 
 function DriverStats() {
   const [stats, setStats] = useState({
-    todayParking: 0,
-    todayRetrieval: 0,
-    totalParking: 0,
-    totalRetrieval: 0
+    todayParking: 0
   });
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -90,30 +87,6 @@ function DriverStats() {
           <div className="stat-info">
             <h3>{stats.todayParking}</h3>
             <p>Today's Parking</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon"></div>
-          <div className="stat-info">
-            <h3>{stats.todayRetrieval}</h3>
-            <p>Today's Retrieval</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon"></div>
-          <div className="stat-info">
-            <h3>{stats.totalParking}</h3>
-            <p>Total Parking</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon"></div>
-          <div className="stat-info">
-            <h3>{stats.totalRetrieval}</h3>
-            <p>Total Retrieval</p>
           </div>
         </div>
       </div>

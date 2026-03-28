@@ -33,27 +33,38 @@ function DriverRequests() {
   };
 
   useEffect(() => {
-    const loadData = async () => {
+    let isMounted = true;
+    let timerId = null;
+
+    const pollData = async () => {
+      if (!isMounted) return;
       try {
-        setLoading(true);
         await fetchRequests();
         await fetchActiveTickets();
       } catch (error) {
         console.error(error);
       } finally {
+        if (isMounted) {
+          timerId = setTimeout(pollData, 5000);
+        }
+      }
+    };
+
+    const initialLoad = async () => {
+      setLoading(true);
+      await pollData();
+      if (isMounted) {
         setLoading(false);
       }
     };
-    
-    loadData();
-    
-    const interval = setInterval(() => {
-      loadData();
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, []);
 
+    initialLoad();
+
+    return () => {
+      isMounted = false;
+      if (timerId) clearTimeout(timerId);
+    };
+  }, []);
 
   const handleAccept = async (requestId) => {
     try {
@@ -127,7 +138,7 @@ function DriverRequests() {
               <p><strong>Car:</strong> {req?.ticket?.car?.brand} {req?.ticket?.car?.model} ({req?.ticket?.car?.plateNumber})</p>
               <p><strong>Customer:</strong> {req?.ticket?.user?.name}</p>
               <p><strong>Location:</strong> {req?.ticket?.parkingArea?.name}</p>
-              {req.requestType === 'PARKING' && req?.ticket?.status === 'DRIVER_ASSIGNED' && (
+              {req.requestType === 'PARKING' && (
                 <button
                   onClick={() => handleCompleteParking(req.ticket.ticketNumber)}
                   className="btn-complete"
@@ -136,7 +147,7 @@ function DriverRequests() {
                   {actionLoading[`parking-${req.ticket.ticketNumber}`] ? 'Completing...' : 'Complete Parking'}
                 </button>
               )}
-              {req.requestType === 'RETRIEVAL' && req?.ticket?.status === 'CAR_ON_THE_WAY' && (
+              {req.requestType === 'RETRIEVAL' && (
                 <button
                   onClick={() => handleCompleteRetrieval(req.ticket.ticketNumber)}
                   className="btn-complete"
