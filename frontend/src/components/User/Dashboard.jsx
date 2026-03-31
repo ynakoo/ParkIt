@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Profile from './Profile';
+import Cars from './Cars';
+import History from './History';
+import Complaints from './Complaints';
 import './user.css';
 
 function Dashboard() {
+  const [section, setSection] = useState('DASHBOARD');
   const [tickets, setTickets] = useState([]);
   const [currentTicket, setCurrentTicket] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -69,9 +74,11 @@ function Dashboard() {
       
       if (res.ok) {
         alert('Retrieval request sent to drivers');
-        fetchTickets();
+        // Await the fetch to ensure UI is updated before loading is set to false
+        await fetchTickets();
       } else {
-        alert('Failed to send retrieval request');
+        const error = await res.json();
+        alert(error.error || 'Failed to send retrieval request');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -84,8 +91,8 @@ function Dashboard() {
   const STEPS = ['REQUESTED', 'DRIVER_ASSIGNED', 'PARKED', 'CAR_ON_THE_WAY'];
   const getStepIndex = (status) => STEPS.indexOf(status);
 
-  return (
-    <div className="user-dashboard">
+  const renderDashboardHome = () => (
+    <div className="section-container">
       <div className="dashboard-header glass-panel">
         <h2>Welcome back, <span className="text-gradient">{user.name}</span></h2>
         <p className="subtitle" style={{marginBottom: 0}}>Your central hub for seamless parking management.</p>
@@ -102,11 +109,75 @@ function Dashboard() {
         </div>
       )}
 
+      {!currentTicket && !loading && (
+        <div className="service-instructions glass-panel">
+          <h3>How it Works</h3>
+          <div className="instruction-steps">
+            <div className="step-item">
+              <div className="step-number">1</div>
+              <div className="step-text">
+                <strong>Selection</strong>
+                <p>Select your car and the parking area.</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">2</div>
+              <div className="step-text">
+                <strong>Request</strong>
+                <p>Request sent → driver accepts.</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">3</div>
+              <div className="step-text">
+                <strong>Arrival</strong>
+                <p>Driver arrives at pickup point.</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">4</div>
+              <div className="step-text">
+                <strong>Verification</strong>
+                <p>Ticket verification (Driver + User must see full ticket number).</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">5</div>
+              <div className="step-text">
+                <strong>Handover</strong>
+                <p>User hands over keys to the driver.</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">6</div>
+              <div className="step-text">
+                <strong>Retrieval</strong>
+                <p>For retrieval → user sends request.</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">7</div>
+              <div className="step-text">
+                <strong>Collection</strong>
+                <p>Collect car at drop-off zone.</p>
+              </div>
+            </div>
+            <div className="step-item">
+              <div className="step-number">8</div>
+              <div className="step-text">
+                <strong>Final Check</strong>
+                <p>Ticket re-verification (Must match).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {currentTicket && (
         <div className="current-ticket glass-panel">
           <div className="ticket-header">
             <h3>Active Parking Status</h3>
-            <span className="ticket-badge">#{currentTicket.ticketNumber.slice(-6)}</span>
+            <span className="ticket-badge">#{currentTicket.ticketNumber}</span>
           </div>
           
           <div className="lifecycle-stepper">
@@ -156,12 +227,15 @@ function Dashboard() {
 
       {tickets.filter(t => t.status === 'COMPLETED').length > 0 && (
         <div className="ticket-history">
-          <h3 style={{marginBottom: '20px'}}>Past Parking History</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 style={{ margin: 0 }}>Recent Activity</h3>
+            <button onClick={() => setSection('HISTORY')} className="btn-secondary" style={{ width: 'auto', padding: '6px 12px', fontSize: '13px' }}>View All</button>
+          </div>
           <div className="history-grid">
-            {tickets.filter(t => t.status === 'COMPLETED').map(ticket => (
+            {tickets.filter(t => t.status === 'COMPLETED').slice(0, 2).map(ticket => (
               <div key={ticket.ticketNumber} className="history-item glass-panel">
                 <div className="history-top">
-                  <strong>#{ticket.ticketNumber.slice(-6)}</strong>
+                  <strong>#{ticket.ticketNumber}</strong>
                   <span className="status-badge completed">Completed</span>
                 </div>
                 <p>{ticket.car.brand} {ticket.car.model}</p>
@@ -171,6 +245,52 @@ function Dashboard() {
           </div>
         </div>
       )}
+    </div>
+  );
+
+  const renderSection = () => {
+    switch (section) {
+      case 'DASHBOARD':
+        return renderDashboardHome();
+      case 'PROFILE':
+        return <Profile />;
+      case 'CARS':
+        return <Cars />;
+      case 'HISTORY':
+        return <History />;
+      case 'COMPLAINTS':
+        return <Complaints />;
+      default:
+        return renderDashboardHome();
+    }
+  };
+
+  return (
+    <div className="user-dashboard">
+      <div className="user-sidebar">
+        <h3>ParkIt</h3>
+        <div className="sidebar-nav">
+          <p className={section === 'DASHBOARD' ? 'active' : ''} onClick={() => setSection('DASHBOARD')}>
+            Dashboard
+          </p>
+          <p className={section === 'CARS' ? 'active' : ''} onClick={() => setSection('CARS')}>
+            My Cars
+          </p>
+          <p className={section === 'HISTORY' ? 'active' : ''} onClick={() => setSection('HISTORY')}>
+            Ticket History
+          </p>
+          <p className={section === 'COMPLAINTS' ? 'active' : ''} onClick={() => setSection('COMPLAINTS')}>
+            Complaints
+          </p>
+          <p className={section === 'PROFILE' ? 'active' : ''} onClick={() => setSection('PROFILE')}>
+            Profile
+          </p>
+        </div>
+      </div>
+
+      <div className="user-content">
+        {renderSection()}
+      </div>
     </div>
   );
 }
