@@ -7,7 +7,7 @@ ParkIt is a comprehensive parking management solution designed to streamline the
 | Role | Email | Password |
 |---|---|---|
 | Super Admin | koyna@gmail.com | 123456 |
-| Driver | swarnim@gmail.com | 123456 |
+| Driver | punar@gmail.com | 123456 |
 | User | ashwin@gmail.com | 123456 |
 | Manager | aparajita@gmail.com | 123456 |
 
