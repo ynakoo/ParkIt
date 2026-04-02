@@ -124,49 +124,35 @@ function Dashboard() {
               <div className="step-number">2</div>
               <div className="step-text">
                 <strong>Request</strong>
-                <p>Request sent → driver accepts.</p>
+                <p>Send a request for a driver to collect your car.</p>
               </div>
             </div>
             <div className="step-item">
               <div className="step-number">3</div>
               <div className="step-text">
-                <strong>Arrival</strong>
-                <p>Driver arrives at pickup point.</p>
+                <strong>Drop-off</strong>
+                <p>Leave your car and keys at the pickup area. No manual ticket verification needed!</p>
               </div>
             </div>
             <div className="step-item">
               <div className="step-number">4</div>
               <div className="step-text">
-                <strong>Verification</strong>
-                <p>Ticket verification (Driver + User must see full ticket number).</p>
+                <strong>Freedom</strong>
+                <p>You can leave immediately after dropping your car. Request retrieval anytime you want.</p>
               </div>
             </div>
             <div className="step-item">
               <div className="step-number">5</div>
               <div className="step-text">
-                <strong>Handover</strong>
-                <p>User hands over keys to the driver.</p>
+                <strong>Retrieval</strong>
+                <p>When ready, request your car to be brought back to the drop-off point.</p>
               </div>
             </div>
             <div className="step-item">
               <div className="step-number">6</div>
               <div className="step-text">
-                <strong>Retrieval</strong>
-                <p>For retrieval → user sends request.</p>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">7</div>
-              <div className="step-text">
                 <strong>Collection</strong>
-                <p>Collect car at drop-off zone.</p>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">8</div>
-              <div className="step-text">
-                <strong>Final Check</strong>
-                <p>Ticket re-verification (Must match).</p>
+                <p>Collect your car from the drop-off point. It's that simple!</p>
               </div>
             </div>
           </div>

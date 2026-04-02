@@ -23,7 +23,7 @@ function Complaints() {
 
       {submitted ? (
         <div className="success-banner glass-panel" style={{ marginTop: '24px', padding: '30px', textAlign: 'center' }}>
-          <div style={{ fontSize: '40px', marginBottom: '15px' }}>✅</div>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '15px', color: 'var(--success)' }}>SUCCESS</div>
           <h3>Complaint Submitted</h3>
           <p>We've received your complaint and will get back to you shortly.</p>
           <button onClick={() => setSubmitted(false)} className="btn-secondary" style={{ marginTop: '20px' }}>

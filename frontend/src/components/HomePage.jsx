@@ -18,7 +18,7 @@ function HomePage() {
 
       <section className="hero">
         <div className="hero-content">
-          <div className="badge">✨ The Future of Parking</div>
+          <div className="badge">The Future of Parking</div>
           <h1>Your Personal <br/><span className="text-gradient">Digital Valet</span></h1>
           <p>Experience hassle-free parking. Arrive at a location, let our professional drivers take the wheel, and request your car back with a single tap.</p>
           <div className="hero-buttons">
@@ -30,8 +30,8 @@ function HomePage() {
           {/* Using a glass panel to frame the image nicely */}
           <div className="glass-panel image-glass">
              <img src="/parkit_img2.png" alt="ParkIt Valet Service" className="hero-img" onError={(e) => e.target.style.display = 'none'} />
-             <div className="floating-badge badge-1">🛡️ Fully Insured</div>
-             <div className="floating-badge badge-2">⏱️ 5-min Retrieval</div>
+             <div className="floating-badge badge-1">Fully Insured</div>
+             <div className="floating-badge badge-2">5-min Retrieval</div>
           </div>
         </div>
       </section>
@@ -59,8 +59,8 @@ function HomePage() {
           
           <div className="timeline-step">
             <div className="step-circle hover-grow">3</div>
-            <h3>Hand Over Keys</h3>
-            <p>A certified driver will meet you to collect your vehicle.</p>
+            <h3>Leave in Pickup</h3>
+            <p>Leave your car and keys at the pickup area. You're free to go immediately!</p>
           </div>
           
           <div className="timeline-line"></div>
