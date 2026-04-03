@@ -201,10 +201,10 @@ function Dashboard() {
                 </button>
               )}
               {currentTicket.status === 'PARKED' && currentTicket.requests?.some(r => r.requestType === 'RETRIEVAL' && r.status === 'PENDING') && (
-                <div className="info-banner">⏳ Retrieval request sent. Waiting for a driver...</div>
+                <div className="info-banner"> Retrieval request sent. Waiting for a driver...</div>
               )}
               {currentTicket.status === 'CAR_ON_THE_WAY' && (
-                <div className="success-banner">🚗 Driver is on the way to retrieve your car!</div>
+                <div className="success-banner"> Driver is on the way to retrieve your car, Collect it at drop-off zone</div>
               )}
             </div>
           </div>
