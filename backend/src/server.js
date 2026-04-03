@@ -29,11 +29,13 @@ const adminRoutes = require('./routes/superAdmin.routes')
 const managerRoutes = require('./routes/manager.routes')
 const userRoutes = require('./routes/user.routes')
 const driverRoutes = require('./routes/driver.routes')
+const complaintRoutes = require('./routes/complaint.routes')
 app.use('/api/auth', authRoutes)
 app.use('/api/superAdmin', adminRoutes)
 app.use('/api/manager', managerRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/driver', driverRoutes)
+app.use('/api/complaints', complaintRoutes)
 // app.use((err, req, res, next) => {
 //     console.error("Unhandled Error:", err);
 //     res.status(500).json({
