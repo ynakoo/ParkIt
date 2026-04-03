@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import DriverList from './Manager/DriverList';
 import AddDriver from './Manager/AddDriver';
+import Complaints from './Manager/Complaints';
+import Tickets from './Manager/Tickets';
 import Profile from './Manager/Profile';
 import './SuperAdmin/admin.css';
 import './Manager/manager.css';
@@ -14,6 +16,10 @@ function ManagerDashboard() {
         return <DriverList />;
       case 'ADD_DRIVER':
         return <AddDriver />;
+      case 'TICKETS':
+        return <Tickets />;
+      case 'COMPLAINTS':
+        return <Complaints />;
       case 'PROFILE':
         return <Profile />;
       default:
@@ -27,6 +33,8 @@ function ManagerDashboard() {
         <h3>Manager Panel</h3>
         <p onClick={() => setSection('DASHBOARD')}>Dashboard</p>
         <p onClick={() => setSection('ADD_DRIVER')}>Add Driver</p>
+        <p onClick={() => setSection('TICKETS')}>Tickets</p>
+        <p onClick={() => setSection('COMPLAINTS')}>Complaints</p>
         <p onClick={() => setSection('PROFILE')}>Profile</p>
       </div>
 
