@@ -157,8 +157,8 @@ model User {
   cars      Car[]
   driver    Driver?
   tickets   Ticket[]
-
-  // 🔹 Added relation to ParkingArea
+  complaints Complaint[]
+  // Added relation to ParkingArea
   parkingAreas ParkingArea[]
 }
 
@@ -172,9 +172,9 @@ model ParkingArea {
   amount    Int
   status    ParkingAreaStatus @default(PENDING)
 
-  // 🔹 Relation to User
+  // Relation to User
   manager User? @relation(fields: [managerId], references: [id], onDelete: SetNull)
-
+  complaints Complaint[]
   drivers Driver[]
   tickets Ticket[]
 }
@@ -214,6 +214,7 @@ model Ticket {
   status        TicketStatus    @default(REQUESTED)
   createdAt     DateTime        @default(now())
   requests      DriverRequest[]
+  complaints Complaint[]
   car           Car             @relation(fields: [carId], references: [id], onDelete: Cascade)
   parkingArea   ParkingArea     @relation(fields: [parkingAreaId], references: [id], onDelete: Cascade)
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -235,6 +236,21 @@ model DriverRequest {
 
   @@index([driverId], map: "DriverRequest_driver_idx")
   @@index([ticketNo], map: "DriverRequest_ticket_idx")
+}
+
+model Complaint {
+  id             String   @id
+  userId         String
+  parkingAreaId  String? 
+  ticketNumber   String? 
+  description    String
+  status         String   @default("OPEN")
+  createdAt      DateTime @default(now())
+
+  // Relations
+  user           User     @relation(fields: [userId], references: [id])
+  parkingArea    ParkingArea? @relation(fields: [parkingAreaId], references: [id])
+  ticket         Ticket?       @relation(fields: [ticketNumber], references: [ticketNumber])
 }
 
 enum Role {
