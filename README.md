@@ -2,6 +2,9 @@
 
 ParkIt is a comprehensive parking management solution designed to streamline the parking process for users, drivers, and administrators. It features a robust backend for managing parking areas, tickets, and driver assignments, combined with an intuitive frontend for various user roles.
 
+
+[## Demo Video Link](https://drive.google.com/file/d/16k5M0lgTZjuw6KjaXw9GJTgU73x1q8Xk/view?usp=sharing)
+
 ## Test Credentials
 
 | Role | Email | Password |
@@ -92,5 +95,4 @@ ParkIt is a comprehensive parking management solution designed to streamline the
 4. Start the development server:
    npm run dev
 
-## License
-This project is licensed under the ISC License.
+
